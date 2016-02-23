@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEngine.UI;
 public class Cursor : MonoBehaviour
 {
 
     private Ray ray; // the ray that will be shot
     private RaycastHit hit; // variable to hold the object that is hit
     public Camera playerCamera;
+    public InputField inputField;
+
+    private string action;
+
     // Use this for initialization
     void Start()
     {
@@ -28,13 +32,20 @@ public class Cursor : MonoBehaviour
             Debug.DrawRay(playerCamera.transform.position, screenCenterPoint, Color.green);
             if (Physics.Raycast(ray, out hit, Camera.main.farClipPlane))
             {
-                if (hit.transform.tag == "torch")
+                if (Input.GetMouseButtonDown(0))
                 {
-
-                    Debug.Log("torch found!");
-                    // A collision was detected please deal with it
+                    if (hit.transform.tag == "torch")
+                    {
+                        inputField.enabled = true;
+                        //inputField = InputField
+                        Debug.Log("torch found!");
+                        // A collision was detected please deal with it
+                    }
+                    else
+                    {
+                        inputField.enabled = false;
+                    }
                 }
-
             }
         }
     }
