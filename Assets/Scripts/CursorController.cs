@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-public class Cursor : MonoBehaviour
+using UnityEngine.EventSystems;
+
+public class CursorController : MonoBehaviour
 {
 
     private Ray ray; // the ray that will be shot
@@ -10,17 +12,20 @@ public class Cursor : MonoBehaviour
     public InputField inputField;
     public float raycastDistance;
     
-    private string action;
+   [HideInInspector]
+    public string action;
 
     //panel variables
     public GameObject panel;
     public Text objectName;
     public Text wordsSuggested;
 
+    CursorLockMode wantedMode;
 
     // Use this for initialization
     void Start()
     {
+        //Cursor.lockState = CursorLockMode.Locked;
         panel.SetActive(false);
         
     }
@@ -28,6 +33,7 @@ public class Cursor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        action = inputField.text;
         if (Input.anyKeyDown)
         {
             // The Vector2 class holds the position for a point with only x and y coordinates
@@ -44,25 +50,19 @@ public class Cursor : MonoBehaviour
                 {
                     if (hit.transform.tag == "torch")
                     {
-                        panel.SetActive(true);
-                        inputField.enabled = false;
-                        objectName.text = "A Torch";
-                        wordsSuggested.text = "TAKE\n" +
-                                               "BLOW\n" +
-                                                 "TOUCH";
+                        HittingTorch();
+               
                     }
                     else if (hit.transform.tag == "celldoor")
                     {
-                        panel.SetActive(true);
-                        inputField.enabled = false;
-                        objectName.text = "The Celldoor";
-                        wordsSuggested.text = "OPEN\n" +
-                                               "CLOSE\n" +
-                                                 "";
+                        HittingCelldoor();
+                    }
+                    else if (hit.transform.tag == "pushspell")
+                    {
+                        HittingPushSpell();
                     }
                     else 
                     {
-                        inputField.enabled = true;
                         inputField.text = "";
                         panel.SetActive(false);
                         objectName.text = "";
@@ -71,5 +71,52 @@ public class Cursor : MonoBehaviour
                 }
             }
         }
+        // Release cursor on Esc keypress
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.lockState = wantedMode = CursorLockMode.None;
+            SetCursorState();
+        }
+        // Lock cursor on M keypress
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            Cursor.lockState = wantedMode = CursorLockMode.Locked;
+            SetCursorState();
+        }
+            
     }
+    public void HittingTorch()
+    {
+        panel.SetActive(true);
+        objectName.text = "A Torch";
+        wordsSuggested.text = "TAKE\n" +
+                               "BLOW\n" +
+                                 "TOUCH";
+        inputField.ActivateInputField();
+    }
+
+    public void HittingCelldoor()
+    {
+        panel.SetActive(true);
+        objectName.text = "The Celldoor";
+        wordsSuggested.text = "OPEN\n" +
+                               "CLOSE\n" +
+                                 "";
+        inputField.ActivateInputField();
+    }
+    public void HittingPushSpell()
+    {
+        panel.SetActive(true);
+        objectName.text = "The Push Spell";
+        wordsSuggested.text = "TAKE\n";
+        inputField.ActivateInputField();
+    }
+    // Apply requested cursor state
+    void SetCursorState()
+    {
+        Cursor.lockState = wantedMode;
+        // Hide cursor when locking
+        Cursor.visible = (CursorLockMode.Locked != wantedMode);
+    }
+    
 }
