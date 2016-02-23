@@ -8,13 +8,21 @@ public class Cursor : MonoBehaviour
     private RaycastHit hit; // variable to hold the object that is hit
     public Camera playerCamera;
     public InputField inputField;
-
+    public float raycastDistance;
+    
     private string action;
+
+    //panel variables
+    public GameObject panel;
+    public Text objectName;
+    public Text wordsSuggested;
+
 
     // Use this for initialization
     void Start()
     {
-
+        panel.SetActive(false);
+        
     }
 
     // Update is called once per frame
@@ -30,20 +38,35 @@ public class Cursor : MonoBehaviour
             // Since we are using the MainCamera of our scene we can have access to it using the Camera.main
             ray = playerCamera.ScreenPointToRay(screenCenterPoint);
             Debug.DrawRay(playerCamera.transform.position, screenCenterPoint, Color.green);
-            if (Physics.Raycast(ray, out hit, Camera.main.farClipPlane))
+            if (Physics.Raycast(ray, out hit, raycastDistance))
             {
                 if (Input.GetMouseButtonDown(0))
                 {
                     if (hit.transform.tag == "torch")
                     {
-                        inputField.enabled = true;
-                        //inputField = InputField
-                        Debug.Log("torch found!");
-                        // A collision was detected please deal with it
-                    }
-                    else
-                    {
+                        panel.SetActive(true);
                         inputField.enabled = false;
+                        objectName.text = "A Torch";
+                        wordsSuggested.text = "TAKE\n" +
+                                               "BLOW\n" +
+                                                 "TOUCH";
+                    }
+                    else if (hit.transform.tag == "celldoor")
+                    {
+                        panel.SetActive(true);
+                        inputField.enabled = false;
+                        objectName.text = "The Celldoor";
+                        wordsSuggested.text = "OPEN\n" +
+                                               "CLOSE\n" +
+                                                 "";
+                    }
+                    else 
+                    {
+                        inputField.enabled = true;
+                        inputField.text = "";
+                        panel.SetActive(false);
+                        objectName.text = "";
+                        wordsSuggested.text = "";
                     }
                 }
             }
