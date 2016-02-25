@@ -1,26 +1,40 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class CursorController : MonoBehaviour
 {
-
+    //raycast
     private Ray ray; // the ray that will be shot
     private RaycastHit hit; // variable to hold the object that is hit
     public Camera playerCamera;
     public InputField inputField;
     public float raycastDistance;
-    
-   [HideInInspector]
-    public string action;
 
-    //panel variables
+    //cursor
+    CursorLockMode wantedMode;
+
+    //the action wrote by the player
+   // [HideInInspector]
+    public string action;
+    //the object hit by the raycast to check against the action chose by the player
+    //[HideInInspector]
+    public string objectHit;
+
+    //input panel and suggestions variables
     public GameObject panel;
     public Text objectName;
     public Text wordsSuggested;
 
-    CursorLockMode wantedMode;
+    //sounds
+    public AudioClip inputPopUp;
+
+    //spells
+    public GameObject pushSymbol;
+    private bool iLearnedPush = false;
 
     // Use this for initialization
     void Start()
@@ -33,13 +47,12 @@ public class CursorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        action = inputField.text;
+        
         if (Input.anyKeyDown)
         {
             // The Vector2 class holds the position for a point with only x and y coordinates
             // The center of the screen is calculated by dividing the width and height by half
             Vector2 screenCenterPoint = new Vector2(Screen.width / 2, Screen.height / 2);
-
             // The method ScreenPointToRay needs to be called from a camera
             // Since we are using the MainCamera of our scene we can have access to it using the Camera.main
             ray = playerCamera.ScreenPointToRay(screenCenterPoint);
@@ -50,15 +63,17 @@ public class CursorController : MonoBehaviour
                 {
                     if (hit.transform.tag == "torch")
                     {
+                        AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingTorch();
-               
                     }
                     else if (hit.transform.tag == "celldoor")
                     {
+                        AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingCelldoor();
                     }
                     else if (hit.transform.tag == "pushspell")
                     {
+                        AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingPushSpell();
                     }
                     else 
@@ -89,27 +104,27 @@ public class CursorController : MonoBehaviour
     {
         panel.SetActive(true);
         objectName.text = "A Torch";
-        wordsSuggested.text = "TAKE\n" +
-                               "BLOW\n" +
-                                 "TOUCH";
+        wordsSuggested.text = "TAKE\n" +"BLOW\n" +"TOUCH";
         inputField.ActivateInputField();
+        objectHit = "torch";
     }
 
     public void HittingCelldoor()
     {
         panel.SetActive(true);
         objectName.text = "The Celldoor";
-        wordsSuggested.text = "OPEN\n" +
-                               "CLOSE\n" +
-                                 "";
+        wordsSuggested.text = "OPEN\n" +"CLOSE\n" +"";
         inputField.ActivateInputField();
+        objectHit = "celldoor";
     }
     public void HittingPushSpell()
     {
         panel.SetActive(true);
-        objectName.text = "The Push Spell";
-        wordsSuggested.text = "TAKE\n";
+        objectName.text = "Push Spell";
+        wordsSuggested.text = "READ\n";
         inputField.ActivateInputField();
+        objectHit = "pushspell";
+
     }
     // Apply requested cursor state
     void SetCursorState()
@@ -118,5 +133,25 @@ public class CursorController : MonoBehaviour
         // Hide cursor when locking
         Cursor.visible = (CursorLockMode.Locked != wantedMode);
     }
-    
+    public void HidePanel()
+    {
+        action = inputField.text;
+        panel.SetActive(false);
+        objectName.text = "";
+        wordsSuggested.text = "";
+        inputField.text = "";
+        inputField.DeactivateInputField();
+    }
+    public void CheckForWords()
+    {
+        if(objectHit == "pushspell" && action == "read")
+        {
+            pushSymbol.SetActive(true);
+            iLearnedPush = true;
+            //hit.transform.gameObject.SetActive(false);
+            GameObject pushS;
+            pushS = GameObject.FindGameObjectWithTag("pushspell");
+            pushS.SetActive(false);
+        }
+    }
 }
