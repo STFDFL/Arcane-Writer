@@ -7,13 +7,15 @@ using UnityEngine.EventSystems;
 
 public class CursorController : MonoBehaviour
 {
+    
+    
     //raycast
     private Ray ray; // the ray that will be shot
     private RaycastHit hit; // variable to hold the object that is hit
     public Camera playerCamera;
     public InputField inputField;
     public float raycastDistance;
-
+    
     //cursor
     CursorLockMode wantedMode;
 
@@ -22,7 +24,8 @@ public class CursorController : MonoBehaviour
     public string action;
     //the object hit by the raycast to check against the action chose by the player
     //[HideInInspector]
-    public string objectHit;
+    public string objectHitName;
+    
 
     //input panel and suggestions variables
     public GameObject panel;
@@ -31,11 +34,16 @@ public class CursorController : MonoBehaviour
 
     //sounds
     public AudioClip inputPopUp;
-
+    public AudioClip pushSpellSound;
     //spells
     public GameObject pushSymbol;
     private bool iLearnedPush = false;
 
+    //messages popping up
+    public GameObject itsLocked;
+    public GameObject itsAlreadyClosed;
+
+    
     // Use this for initialization
     void Start()
     {
@@ -65,11 +73,13 @@ public class CursorController : MonoBehaviour
                     {
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingTorch();
+                      
                     }
                     else if (hit.transform.tag == "celldoor")
                     {
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingCelldoor();
+                        
                     }
                     else if (hit.transform.tag == "pushspell")
                     {
@@ -106,7 +116,7 @@ public class CursorController : MonoBehaviour
         objectName.text = "A Torch";
         wordsSuggested.text = "TAKE\n" +"BLOW\n" +"TOUCH";
         inputField.ActivateInputField();
-        objectHit = "torch";
+        objectHitName = "torch";
     }
 
     public void HittingCelldoor()
@@ -115,7 +125,7 @@ public class CursorController : MonoBehaviour
         objectName.text = "The Celldoor";
         wordsSuggested.text = "OPEN\n" +"CLOSE\n" +"";
         inputField.ActivateInputField();
-        objectHit = "celldoor";
+        objectHitName = "celldoor";
     }
     public void HittingPushSpell()
     {
@@ -123,7 +133,7 @@ public class CursorController : MonoBehaviour
         objectName.text = "Push Spell";
         wordsSuggested.text = "READ\n";
         inputField.ActivateInputField();
-        objectHit = "pushspell";
+        objectHitName = "pushspell";
 
     }
     // Apply requested cursor state
@@ -144,7 +154,7 @@ public class CursorController : MonoBehaviour
     }
     public void CheckForWords()
     {
-        if(objectHit == "pushspell" && action == "read")
+        if(objectHitName == "pushspell" && action == "read")
         {
             pushSymbol.SetActive(true);
             iLearnedPush = true;
@@ -152,6 +162,21 @@ public class CursorController : MonoBehaviour
             GameObject pushS;
             pushS = GameObject.FindGameObjectWithTag("pushspell");
             pushS.SetActive(false);
+        }
+        else if (objectHitName == "celldoor" && action == "open")
+        {
+            itsLocked.SetActive(true);
+        }
+        else if (objectHitName == "celldoor" && action == "close")
+        {
+            itsAlreadyClosed.SetActive(true);
+        }
+        else if (objectHitName == "celldoor" && action == "push" && iLearnedPush == true)
+        {
+            GameObject tutorialDoor = GameObject.Find("Tutorial Door");
+            CellDoor cellDoorScript = tutorialDoor.GetComponent<CellDoor>();
+            cellDoorScript.pushIsApplied = true;
+            AudioSource.PlayClipAtPoint(pushSpellSound, transform.position);
         }
     }
 }
