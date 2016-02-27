@@ -71,8 +71,7 @@ public class CursorController : MonoBehaviour
             Debug.DrawRay(playerCamera.transform.position, screenCenterPoint, Color.green);
             if (Physics.Raycast(ray, out hit, raycastDistance))
             {
-                //to complete (changing the cursor on hitting)
-                theCursorWhenHitting.enabled = true;
+                
                 if (Input.GetMouseButtonDown(0))
                 {
                     CheckAnyHit();
