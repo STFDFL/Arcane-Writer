@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class CursorController : MonoBehaviour
 {
-    
+    public FirstPersonController FPSC;
     
     //raycast
     private Ray ray; // the ray that will be shot
@@ -18,12 +19,14 @@ public class CursorController : MonoBehaviour
     
     //cursor
     CursorLockMode wantedMode;
-
+    bool isCursorLocked = false;
+    public Image theCursor;
+    public Image theCursorWhenHitting;
     //the action wrote by the player
-   // [HideInInspector]
+    [HideInInspector]
     public string action;
     //the object hit by the raycast to check against the action chose by the player
-    //[HideInInspector]
+    [HideInInspector]
     public string objectHitName;
     
 
@@ -49,13 +52,14 @@ public class CursorController : MonoBehaviour
     {
         //Cursor.lockState = CursorLockMode.Locked;
         panel.SetActive(false);
-        
+        FPSC = GameObject.FindObjectOfType<FirstPersonController>();
+       
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+       
         if (Input.anyKeyDown)
         {
             // The Vector2 class holds the position for a point with only x and y coordinates
@@ -67,8 +71,11 @@ public class CursorController : MonoBehaviour
             Debug.DrawRay(playerCamera.transform.position, screenCenterPoint, Color.green);
             if (Physics.Raycast(ray, out hit, raycastDistance))
             {
+                //to complete (changing the cursor on hitting)
+                theCursorWhenHitting.enabled = true;
                 if (Input.GetMouseButtonDown(0))
                 {
+                    CheckAnyHit();
                     if (hit.transform.tag == "torch")
                     {
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
@@ -96,43 +103,45 @@ public class CursorController : MonoBehaviour
                 }
             }
         }
-        // Release cursor on Esc keypress
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Cursor.lockState = wantedMode = CursorLockMode.None;
-            SetCursorState();
+            if(isCursorLocked == false)
+            {
+                //lock
+                Cursor.lockState = wantedMode = CursorLockMode.Locked;
+                SetCursorState();
+                isCursorLocked = true;
+            }
+            else if(isCursorLocked == true)
+            {
+                //release
+                Cursor.lockState = wantedMode = CursorLockMode.None;
+                SetCursorState();
+                isCursorLocked = false;
+            }
         }
-        // Lock cursor on M keypress
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            Cursor.lockState = wantedMode = CursorLockMode.Locked;
-            SetCursorState();
-        }
-            
+        
     }
     public void HittingTorch()
     {
-        panel.SetActive(true);
+       // panel.SetActive(true);
         objectName.text = "A Torch";
         wordsSuggested.text = "TAKE\n" +"BLOW\n" +"TOUCH";
-        inputField.ActivateInputField();
         objectHitName = "torch";
     }
 
     public void HittingCelldoor()
     {
-        panel.SetActive(true);
+        //panel.SetActive(true);
         objectName.text = "The Celldoor";
         wordsSuggested.text = "OPEN\n" +"CLOSE\n" +"";
-        inputField.ActivateInputField();
         objectHitName = "celldoor";
     }
     public void HittingPushSpell()
     {
-        panel.SetActive(true);
+       // panel.SetActive(true);
         objectName.text = "Push Spell";
         wordsSuggested.text = "READ\n";
-        inputField.ActivateInputField();
         objectHitName = "pushspell";
 
     }
@@ -151,6 +160,7 @@ public class CursorController : MonoBehaviour
         wordsSuggested.text = "";
         inputField.text = "";
         inputField.DeactivateInputField();
+        FPSC.GetComponent<FirstPersonController>().enabled = true;
     }
     public void CheckForWords()
     {
@@ -177,6 +187,21 @@ public class CursorController : MonoBehaviour
             CellDoor cellDoorScript = tutorialDoor.GetComponent<CellDoor>();
             cellDoorScript.pushIsApplied = true;
             AudioSource.PlayClipAtPoint(pushSpellSound, transform.position);
+        }
+    }
+    public void CheckAnyHit()
+    {
+
+        if (hit.transform.tag == "torch" ||
+            hit.transform.tag == "celldoor" ||
+            hit.transform.tag == "pushspell")
+        {
+            
+            panel.SetActive(true);
+            inputField.ActivateInputField();
+            //GameObject.Find("FPSController").GetComponent<FirstPersonController>().enabled = false;
+            FPSC.GetComponent<FirstPersonController>().enabled = false;
+           
         }
     }
 }
