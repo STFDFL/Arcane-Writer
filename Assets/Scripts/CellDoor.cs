@@ -17,7 +17,7 @@ public class CellDoor : MonoBehaviour {
         if (pushIsApplied == true)
         {
             rb.isKinematic = false;
-            rb.AddForce(transform.forward * thrust);
+            rb.AddForce(-transform.right * thrust);
         }
 	}
 }
