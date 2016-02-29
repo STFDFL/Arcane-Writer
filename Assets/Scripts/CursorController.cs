@@ -92,6 +92,11 @@ public class CursorController : MonoBehaviour
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingPushSpell();
                     }
+                    else if (hit.transform.tag == "lever1")
+                    {
+                        AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
+                        HittingLever1();
+                    }
                     else 
                     {
                         inputField.text = "";
@@ -123,7 +128,7 @@ public class CursorController : MonoBehaviour
     }
     public void HittingTorch()
     {
-       // panel.SetActive(true);
+       
         objectName.text = "A Torch";
         wordsSuggested.text = "TAKE\n" +"BLOW\n" +"TOUCH";
         objectHitName = "torch";
@@ -131,17 +136,25 @@ public class CursorController : MonoBehaviour
 
     public void HittingCelldoor()
     {
-        //panel.SetActive(true);
+       
         objectName.text = "The Celldoor";
         wordsSuggested.text = "OPEN\n" +"CLOSE\n" +"";
         objectHitName = "celldoor";
     }
     public void HittingPushSpell()
     {
-       // panel.SetActive(true);
+      
         objectName.text = "Push Spell";
         wordsSuggested.text = "READ\n";
         objectHitName = "pushspell";
+
+    }
+    public void HittingLever1()
+    {
+       
+        objectName.text = "Lever";
+        wordsSuggested.text = "Pull Left\n" + "Pull Right\n" + "Set Neutral\n";
+        objectHitName = "lever1";
 
     }
     // Apply requested cursor state
@@ -187,12 +200,41 @@ public class CursorController : MonoBehaviour
             cellDoorScript.pushIsApplied = true;
             AudioSource.PlayClipAtPoint(pushSpellSound, transform.position);
         }
+        else if (objectHitName == "lever1")
+        {
+            GameObject lever1 = GameObject.Find("lever1");
+            Levercontroller leverController = lever1.GetComponent<Levercontroller>();
+            if (action == "pull left")
+            {
+                leverController.PullLeverLeft();
+            }
+            else if (action == "pull right")
+            {
+                leverController.PullLeverRight();
+            }
+            else if (action == "set neutral")
+            {
+                leverController.PullLeverNeutral();
+            }
+        }
+        
+        //else if (objectHitName == "lever1" && action == "pull left")
+        //{
+        //    GameObject lever1 = GameObject.Find("lever1");
+        //    Levercontroller leverController = lever1.GetComponent<Levercontroller>(); 
+        //}
+        //else if (objectHitName == "lever1" && action == "pull right")
+        //{
+        //    GameObject lever1 = GameObject.Find("lever1");
+        //    Levercontroller leverController = lever1.GetComponent<Levercontroller>();
+        //}
     }
     public void CheckAnyHit()
     {
 
         if (hit.transform.tag == "torch" ||
             hit.transform.tag == "celldoor" ||
+            hit.transform.tag == "lever1" ||
             hit.transform.tag == "pushspell")
         {
             
