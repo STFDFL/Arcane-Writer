@@ -198,7 +198,6 @@ public class CursorController : MonoBehaviour
             
             panel.SetActive(true);
             inputField.ActivateInputField();
-            //GameObject.Find("FPSController").GetComponent<FirstPersonController>().enabled = false;
             FPSC.GetComponent<FirstPersonController>().enabled = false;
            
         }
