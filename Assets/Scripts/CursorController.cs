@@ -212,10 +212,7 @@ public class CursorController : MonoBehaviour
             {
                 leverController.PullLeverRight();
             }
-            else if (action == "set neutral")
-            {
-                leverController.PullLeverNeutral();
-            }
+           
         }
         
         //else if (objectHitName == "lever1" && action == "pull left")
