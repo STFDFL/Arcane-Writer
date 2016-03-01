@@ -10,15 +10,15 @@ public class Levercontroller : MonoBehaviour {
 
     public bool leverIsPulledLeft = false;
     public bool leverIsPulledRight = false;
-    
     public Animation animationLever;
-   // public Animation animationGate;
     public GameObject gate;
     public bool gateIsOpen = false;
+    public AudioClip leverSound;
+    public AudioClip gateTransition;
     // Use this for initialization
     void Start ()
     {
-        //gate.GetComponent<Gate>();
+        
     }
 	
 	// Update is called once per frame
@@ -31,13 +31,14 @@ public class Levercontroller : MonoBehaviour {
     {
         if(leverIsPulledLeft == false)
         {
+            AudioSource.PlayClipAtPoint(leverSound, transform.position);
             leverIsPulledRight = false;
             leverIsPulledLeft = true;
             animationLever.Play("left");
             gateIsOpen = true;
             if (gateIsOpen == true)
             {
-                Debug.Log("im opening");
+                AudioSource.PlayClipAtPoint(gateTransition, gate.transform.position);
                 gate.GetComponent<Animation>().Play("openGate");
             }
         }
@@ -48,15 +49,15 @@ public class Levercontroller : MonoBehaviour {
     {
         if (leverIsPulledRight == false)
         {
+            AudioSource.PlayClipAtPoint(leverSound, transform.position);
             leverIsPulledRight = true;
-
             leverIsPulledLeft = false;
             animationLever.Play("right");
             gateIsOpen = false;
             if (gateIsOpen == false)
             {
+                AudioSource.PlayClipAtPoint(gateTransition, gate.transform.position);
                 gate.GetComponent<Animation>().Play("closeGate");
-
             }
         }
          

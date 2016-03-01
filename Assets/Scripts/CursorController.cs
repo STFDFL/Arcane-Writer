@@ -97,6 +97,11 @@ public class CursorController : MonoBehaviour
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingLever1();
                     }
+                    else if (hit.transform.tag == "spikeLever")
+                    {
+                        AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
+                        HittingSpikeLever();
+                    }
                     else 
                     {
                         inputField.text = "";
@@ -153,8 +158,16 @@ public class CursorController : MonoBehaviour
     {
        
         objectName.text = "Lever";
-        wordsSuggested.text = "Pull Left\n" + "Pull Right\n" + "Set Neutral\n";
+        wordsSuggested.text = "Pull Left\n" + "Pull Right\n";
         objectHitName = "lever1";
+
+    }
+    public void HittingSpikeLever()
+    {
+
+        objectName.text = "Spike Trap";
+        wordsSuggested.text = "Pull Left\n" + "Pull Right\n";
+        objectHitName = "spikeLever";
 
     }
     // Apply requested cursor state
@@ -214,7 +227,21 @@ public class CursorController : MonoBehaviour
             }
            
         }
-        
+        else if (objectHitName == "spikeLever")
+        {
+            GameObject spikeLever = GameObject.Find("spikeLever");
+            SpikeLever spikeLeverController = spikeLever.GetComponent<SpikeLever>();
+            if (action == "pull left")
+            {
+                spikeLeverController.PullLeverLeft();
+            }
+            else if (action == "pull right")
+            {
+                spikeLeverController.PullLeverRight();
+            }
+
+        }
+
         //else if (objectHitName == "lever1" && action == "pull left")
         //{
         //    GameObject lever1 = GameObject.Find("lever1");
@@ -232,6 +259,7 @@ public class CursorController : MonoBehaviour
         if (hit.transform.tag == "torch" ||
             hit.transform.tag == "celldoor" ||
             hit.transform.tag == "lever1" ||
+            hit.transform.tag == "spikeLever" ||
             hit.transform.tag == "pushspell")
         {
             

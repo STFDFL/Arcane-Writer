@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class SceneManager : MonoBehaviour {
 
@@ -16,5 +17,10 @@ public class SceneManager : MonoBehaviour {
     public void PlayInputConfirm()
     {
         AudioSource.PlayClipAtPoint(inputConfirm, transform.position);
+    }
+
+    internal static void LoadScene(string v)
+    {
+        throw new NotImplementedException();
     }
 }
