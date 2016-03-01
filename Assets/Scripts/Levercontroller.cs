@@ -24,9 +24,6 @@ public class Levercontroller : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        //animation.Play("right");
-       // animation["On"].wrapMode = WrapMode.Once;
-       
       
     }
 
