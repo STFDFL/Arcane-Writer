@@ -29,28 +29,37 @@ public class Levercontroller : MonoBehaviour {
 
     public void PullLeverLeft()
     {
-        leverIsPulledRight = false;
-        leverIsPulledLeft = true;
-        animationLever.Play("left");
-        gateIsOpen = true;
-        if (gateIsOpen == true)
+        if(leverIsPulledLeft == false)
         {
-            Debug.Log("im opening");
-            gate.GetComponent<Animation>().Play("openGate");
+            leverIsPulledRight = false;
+            leverIsPulledLeft = true;
+            animationLever.Play("left");
+            gateIsOpen = true;
+            if (gateIsOpen == true)
+            {
+                Debug.Log("im opening");
+                gate.GetComponent<Animation>().Play("openGate");
+            }
         }
+
+        
     }
     public void PullLeverRight()
     {
-        leverIsPulledRight = true;
-
-        leverIsPulledLeft = false;
-        animationLever.Play("right");
-        gateIsOpen = false;
-        if (gateIsOpen == false)
+        if (leverIsPulledRight == false)
         {
-            gate.GetComponent<Animation>().Play("closeGate");
-            
+            leverIsPulledRight = true;
+
+            leverIsPulledLeft = false;
+            animationLever.Play("right");
+            gateIsOpen = false;
+            if (gateIsOpen == false)
+            {
+                gate.GetComponent<Animation>().Play("closeGate");
+
+            }
         }
+         
     }
     //public void PullLeverNeutral()
     //{
