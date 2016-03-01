@@ -111,6 +111,11 @@ public class CursorController : MonoBehaviour
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingChestKey();
                     }
+                    else if (hit.transform.tag == "chest1")
+                    {
+                        AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
+                        HittingChest();
+                    }
                     else 
                     {
                         inputField.text = "";
@@ -186,6 +191,14 @@ public class CursorController : MonoBehaviour
         objectName.text = "Key";
         wordsSuggested.text = "Take";
         objectHitName = "chestKey1";
+
+    }
+    public void HittingChest()
+    {
+
+        objectName.text = "Chest";
+        wordsSuggested.text = "Open";
+        objectHitName = "chest1";
 
     }
     // Method to lock and center cursor 
@@ -272,6 +285,20 @@ public class CursorController : MonoBehaviour
                 cKey.SetActive(false);
             }  
         }
+        if (objectHitName == "chest1")
+        {
+            GameObject chest = GameObject.Find("chest1");
+            if(iHaveKey)
+            {
+                if (action == "open")
+                {
+                    keySymbol.SetActive(false);
+                    iHaveKey = false;
+                    Debug.Log("the chest is now open");
+                    chest.GetComponent<Animation>().Play("ChestAnim");
+                }
+            }
+        }
     }
 
     public void CheckAnyHit()
@@ -282,6 +309,7 @@ public class CursorController : MonoBehaviour
             hit.transform.tag == "lever1" ||
             hit.transform.tag == "spikeLever" ||
             hit.transform.tag == "chestKey1" ||
+            hit.transform.tag == "chest1" ||
             hit.transform.tag == "pushspell")
         {
             

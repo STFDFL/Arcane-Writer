@@ -8,7 +8,7 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class SpikeLever : MonoBehaviour
 {
-
+   
     public bool leverIsPulledLeft = false;
     public bool leverIsPulledRight = false;
     public GameObject trap;

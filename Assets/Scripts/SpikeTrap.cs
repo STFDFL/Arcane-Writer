@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class SpikeTrap : MonoBehaviour {
-
+    public FirstPersonController FPSC;
     public AudioClip trapSound;
     public AudioClip screamSound;
     public bool trapEnabled = true;
@@ -25,6 +25,7 @@ public class SpikeTrap : MonoBehaviour {
     {
         if(trapHasKilled == true)
         {
+            FPSC.GetComponent<FirstPersonController>().enabled = false;
             timeLeft -= Time.deltaTime;
             if (timeLeft < 0)
             {
