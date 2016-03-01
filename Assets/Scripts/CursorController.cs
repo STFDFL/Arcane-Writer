@@ -8,6 +8,7 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class CursorController : MonoBehaviour
 {
+    [HideInInspector]
     public FirstPersonController FPSC;
     
     //raycast
@@ -42,6 +43,9 @@ public class CursorController : MonoBehaviour
     public GameObject pushSymbol;
     private bool iLearnedPush = false;
 
+    //objects
+    public GameObject keySymbol;
+    public bool iHaveKey = false;
     //messages popping up
     public GameObject itsLocked;
     public GameObject itsAlreadyClosed;
@@ -102,6 +106,11 @@ public class CursorController : MonoBehaviour
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingSpikeLever();
                     }
+                    else if (hit.transform.tag == "chestKey1")
+                    {
+                        AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
+                        HittingChestKey();
+                    }
                     else 
                     {
                         inputField.text = "";
@@ -131,6 +140,7 @@ public class CursorController : MonoBehaviour
         }
         
     }
+    // the following methods decide what to display in the input panel infos
     public void HittingTorch()
     {
        
@@ -170,7 +180,15 @@ public class CursorController : MonoBehaviour
         objectHitName = "spikeLever";
 
     }
-    // Apply requested cursor state
+    public void HittingChestKey()
+    {
+
+        objectName.text = "Key";
+        wordsSuggested.text = "Take";
+        objectHitName = "chestKey1";
+
+    }
+    // Method to lock and center cursor 
     void SetCursorState()
     {
         Cursor.lockState = wantedMode;
@@ -187,6 +205,7 @@ public class CursorController : MonoBehaviour
         inputField.DeactivateInputField();
         FPSC.GetComponent<FirstPersonController>().enabled = true;
     }
+    // this method checks the words inserted by the player in the input 
     public void CheckForWords()
     {
         if(objectHitName == "pushspell" && action == "read")
@@ -241,25 +260,28 @@ public class CursorController : MonoBehaviour
             }
 
         }
-
-        //else if (objectHitName == "lever1" && action == "pull left")
-        //{
-        //    GameObject lever1 = GameObject.Find("lever1");
-        //    Levercontroller leverController = lever1.GetComponent<Levercontroller>(); 
-        //}
-        //else if (objectHitName == "lever1" && action == "pull right")
-        //{
-        //    GameObject lever1 = GameObject.Find("lever1");
-        //    Levercontroller leverController = lever1.GetComponent<Levercontroller>();
-        //}
+        if (objectHitName == "chestKey1")
+        {
+            if (action == "take")
+            {
+                keySymbol.SetActive(true);
+                iHaveKey = true;
+                //hit.transform.gameObject.SetActive(false);
+                GameObject cKey;
+                cKey = GameObject.FindGameObjectWithTag("chestKey1");
+                cKey.SetActive(false);
+            }  
+        }
     }
+
     public void CheckAnyHit()
     {
-
+        Debug.Log(hit.transform.tag);
         if (hit.transform.tag == "torch" ||
             hit.transform.tag == "celldoor" ||
             hit.transform.tag == "lever1" ||
             hit.transform.tag == "spikeLever" ||
+            hit.transform.tag == "chestKey1" ||
             hit.transform.tag == "pushspell")
         {
             
