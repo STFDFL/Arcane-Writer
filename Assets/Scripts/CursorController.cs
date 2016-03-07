@@ -10,7 +10,7 @@ public class CursorController : MonoBehaviour
 {
     [HideInInspector]
     public FirstPersonController FPSC;
-    
+    public GameObject playeTorch;
     //raycast
     private Ray ray; // the ray that will be shot
     private RaycastHit hit; // variable to hold the object that is hit
@@ -230,20 +230,23 @@ public class CursorController : MonoBehaviour
             pushS = GameObject.FindGameObjectWithTag("pushspell");
             pushS.SetActive(false);
         }
-        else if (objectHitName == "celldoor" && action == "open")
-        {
-            itsLocked.SetActive(true);
-        }
-        else if (objectHitName == "celldoor" && action == "close")
-        {
-            itsAlreadyClosed.SetActive(true);
-        }
-        else if (objectHitName == "celldoor" && action == "push" && iLearnedPush == true)
+        else if (objectHitName == "celldoor")
         {
             GameObject tutorialDoor = GameObject.Find("Tutorial Door");
             CellDoor cellDoorScript = tutorialDoor.GetComponent<CellDoor>();
-            cellDoorScript.pushIsApplied = true;
-            AudioSource.PlayClipAtPoint(pushSpellSound, transform.position);
+            if (action == "open")
+            {
+                itsLocked.SetActive(true);
+            }
+            else if (action == "close")
+            {
+                itsAlreadyClosed.SetActive(true);
+            }
+            else if (action == "push" && iLearnedPush == true)
+            {
+                cellDoorScript.pushIsApplied = true;
+                AudioSource.PlayClipAtPoint(pushSpellSound, transform.position);
+            }
         }
         else if (objectHitName == "lever1")
         {
@@ -299,11 +302,21 @@ public class CursorController : MonoBehaviour
                 }
             }
         }
+        if (objectHitName == "torch")
+        {
+            
+            if (action == "take")
+            {
+                hit.transform.gameObject.SetActive(false);
+                playeTorch.SetActive(true);
+                Debug.Log("torch taken");
+            }
+        }
     }
 
     public void CheckAnyHit()
     {
-        Debug.Log(hit.transform.tag);
+        //Debug.Log(hit.transform.tag);
         if (hit.transform.tag == "torch" ||
             hit.transform.tag == "celldoor" ||
             hit.transform.tag == "lever1" ||
