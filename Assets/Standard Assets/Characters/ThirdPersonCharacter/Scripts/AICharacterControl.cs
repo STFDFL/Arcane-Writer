@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
@@ -10,7 +11,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         public NavMeshAgent agent { get; private set; }             // the navmesh agent required for the path finding
         public ThirdPersonCharacter character { get; private set; } // the character we are controlling
         public Transform target;                                    // target to aim for
-
+        private float distance;
+        public float triggerDistance;
+        public FirstPersonController FPSC;
 
         private void Start()
         {
@@ -20,6 +23,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 	        agent.updateRotation = false;
 	        agent.updatePosition = true;
+
+            distance = Vector3.Distance(target.position, transform.position);
+            Debug.Log(gameObject.name + " is " + distance + "the player");
         }
 
 
@@ -32,6 +38,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 character.Move(agent.desiredVelocity, false, false);
             else
                 character.Move(Vector3.zero, false, false);
+            distance = Vector3.Distance(target.position, transform.position);
+            
+            Debug.Log(gameObject.name + " is " + distance + "the player");
+
+            if( distance < triggerDistance)
+            {
+                Debug.Log("combat has started");
+                gameObject.GetComponent<NavMeshAgent>().enabled = false;
+                FPSC.GetComponent<FirstPersonController>().enabled = false;
+            }
         }
 
 
