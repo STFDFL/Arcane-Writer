@@ -2,9 +2,12 @@
 using UnityEngine.UI;
 using System.Collections;
 using UnityStandardAssets.Characters.ThirdPerson;
+using UnityStandardAssets.Characters.FirstPerson;
 
-public class TextCombatScript : MonoBehaviour {
+public class TextCombatScript : MonoBehaviour
+{
 
+    public FirstPersonController FPSC;
     public bool inCombat = false;
 	public int playerAttackNumber;
 	public int AIAttackNumber;
@@ -22,14 +25,17 @@ public class TextCombatScript : MonoBehaviour {
 	public Slider AIHealthBar;
 	public Slider timerBar;
 	private bool timerbarActive;
-    
+    public GameObject combatUI;
+    public Enemy enemy;
 
-	public void Start () {
-		playerHealth = 100;
+    public void Start ()
+    {
+        
+        playerHealth = 100;
 		AIHealth = 100;
 		playerTurn = true;
 		playerTurnTimerReset = Mathf.RoundToInt (playerTurnTimer);
-		playerHealthBar.maxValue = 100;
+		playerHealthBar.maxValue = 100f;
 		playerHealthBar.minValue = 0;
 		AIHealthBar.maxValue = 100;
 		AIHealthBar.minValue = 0;
@@ -38,13 +44,16 @@ public class TextCombatScript : MonoBehaviour {
 		playerHealthBar.value = Mathf.MoveTowards (playerHealth, 100.0f, 0.15f);
 		AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
 		timerBar.value = Mathf.MoveTowards (playerTurnTimer, 100.0f, 0.15f);
-
-	}
+        enemy = enemy.GetComponent<Enemy>();
+        FPSC = GameObject.FindObjectOfType<FirstPersonController>();
+    }
 
 	public void Update ()
     {
         if(inCombat)
         {
+            FPSC.GetComponent<FirstPersonController>().enabled = false;
+            combatUI.SetActive(true);
             if (playerTurn == true)
             {
                 Debug.Log("Player turn");
@@ -135,20 +144,18 @@ public class TextCombatScript : MonoBehaviour {
             {
                 if (playerHealth < 10)
                 {
-                    Debug.LogError("AI WINS");
+                    Debug.LogError("PLAYER IS DEAD");
                 }
                 else if (AIHealth < 10)
                 {
-                    Debug.LogError("YOU WIN");
+                    inCombat = false;
+                    enemy.isThisAlive = false;
+                    combatUI.SetActive(false);
+                    FPSC.GetComponent<FirstPersonController>().enabled = true;
                 }
-                else {
-                    Debug.LogError("Draw");
-                }
+                
             }
-        } else
-        {
-            //unlock the camera
-        }
+        } 
 	}
 
 	void Outcome(){
@@ -157,19 +164,17 @@ public class TextCombatScript : MonoBehaviour {
 
 		if (playerHealth > 9 && AIHealth > 9) {
 			//player
-			if (playerAttackNumber == 1 && playerHitChance > 25) {
+			if (playerAttackNumber == 1 ) {
 				AIHealth = AIHealth - 10;
 				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
-			} else if (playerAttackNumber == 2 && playerHitChance > 50) {
+			} else if (playerAttackNumber == 2 ) {
 				AIHealth = AIHealth - 20;
 				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
-			} else if (playerAttackNumber == 3 && playerHitChance > 75) {
+			} else if (playerAttackNumber == 3 ) {
 				AIHealth = AIHealth - 30;
 				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
-			} else if (playerAttackNumber == 4) {
-				AIHealth = AIHealth - 20;
-				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
-			}
+			} 
+
 			else if (playerAttackNumber == 0) {
 //				Debug.LogWarning ("player didn't attack");
 			}

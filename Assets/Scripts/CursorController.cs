@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityStandardAssets.Characters.FirstPerson;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 public class CursorController : MonoBehaviour
 {
@@ -60,6 +61,7 @@ public class CursorController : MonoBehaviour
         panel.SetActive(false);
         FPSC = GameObject.FindObjectOfType<FirstPersonController>();
         TextCombatScript textCombatScript = sceneManager.GetComponent<TextCombatScript>();
+
     }
 
     // Update is called once per frame
