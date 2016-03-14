@@ -11,6 +11,8 @@ public class CursorController : MonoBehaviour
     [HideInInspector]
     public FirstPersonController FPSC;
     public GameObject playeTorch;
+    public GameObject sceneManager;
+
     //raycast
     private Ray ray; // the ray that will be shot
     private RaycastHit hit; // variable to hold the object that is hit
@@ -57,7 +59,7 @@ public class CursorController : MonoBehaviour
         //Cursor.lockState = CursorLockMode.Locked;
         panel.SetActive(false);
         FPSC = GameObject.FindObjectOfType<FirstPersonController>();
-       
+        TextCombatScript textCombatScript = sceneManager.GetComponent<TextCombatScript>();
     }
 
     // Update is called once per frame
