@@ -27,7 +27,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             agent.updatePosition = true;
 
             distance = Vector3.Distance(target.position, transform.position);
-            Debug.Log(gameObject.name + " is " + distance + "the player");
+            //Debug.Log(gameObject.name + " is " + distance + "the player");
         }
 
 
@@ -44,7 +44,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     character.Move(Vector3.zero, false, false);
                 distance = Vector3.Distance(target.position, transform.position);
 
-                Debug.Log(gameObject.name + " is " + distance + "the player");
+               // Debug.Log(gameObject.name + " is " + distance + "the player");
             }
                
 

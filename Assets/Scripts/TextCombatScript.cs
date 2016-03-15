@@ -27,10 +27,27 @@ public class TextCombatScript : MonoBehaviour
 	private bool timerbarActive;
     public GameObject combatUI;
     public Enemy enemy;
+    public bool playerDefence;
+    public bool AIDefence;
+
+    
+    public int playerDamage1;
+    public int playerDamage2;
+    public int playerDamage3;
+    public int playerDamage4;
+    public int playerDamage5;
+    public int playerDamage6;
+    public int playerDamage7;
+    public int playerDamage8;
+
+    //input varibles
+    public string combatAction;
+    public InputField inputField;
 
     public void Start ()
     {
-        
+        AIDefence = false;
+        playerDefence = false;
         playerHealth = 100;
 		AIHealth = 100;
 		playerTurn = true;
@@ -50,45 +67,67 @@ public class TextCombatScript : MonoBehaviour
 
 	public void Update ()
     {
-        if(inCombat)
-        {
+        combatAction = inputField.text;
+        if (inCombat)
+        { 
             FPSC.GetComponent<FirstPersonController>().enabled = false;
             combatUI.SetActive(true);
             if (playerTurn == true)
             {
+                inputField.ActivateInputField();
                 Debug.Log("Player turn");
-                if (Input.anyKeyDown)
+                if (Input.GetKeyDown(KeyCode.Return))
                 {
+                    Debug.LogWarning(combatAction);
                     StopCoroutine(PlayerTurnTimer());
-                playerHitChanceReset:
+                    playerHitChanceReset:
                     playerHitChance = Random.Range(0, 100);
                     if (playerHitChance == lastPlayerHitChance)
                     {
                         goto playerHitChanceReset;
                     }
                     lastPlayerHitChance = playerHitChance;
-                    if (Input.GetKeyDown("1"))
+                    if (combatAction == "bite")
                     {
                         playerAttackNumber = 1;
                     }
-                    else if (Input.GetKeyDown("2"))
+                    else if (combatAction == "kick")
                     {
                         playerAttackNumber = 2;
                     }
-                    else if (Input.GetKeyDown("3"))
+                    else if (combatAction == "slap")
                     {
                         playerAttackNumber = 3;
                     }
-                    else if (Input.GetKeyDown("4"))
+                    else if (combatAction == "scratch")
                     {
                         playerAttackNumber = 4;
                     }
+                    else if (combatAction == "stand still")
+                    {
+                        playerAttackNumber = 5;
+                    }
+                    else if (combatAction == "strong punch")
+                    {
+                        playerAttackNumber = 6;
+                    }
+                    else if (combatAction == "brace yourself")
+                    {
+                        playerAttackNumber = 7;
+                    }
+                    else if (combatAction == "lick your wounds")
+                    {
+                        playerAttackNumber = 8;
+                    }
+                    
                     else {
                         playerAttackNumber = 0;
                     }
                     StopCoroutine(PlayerTurnTimer());
                     playerTurnTimer = playerTurnTimerReset;
+                    inputField.text = "";
                     StartCoroutine(Wait());
+                    
                 }
                 //			timerbarActive = timerBar.IsActive();
 
@@ -165,17 +204,44 @@ public class TextCombatScript : MonoBehaviour
 		if (playerHealth > 9 && AIHealth > 9) {
 			//player
 			if (playerAttackNumber == 1 ) {
-				AIHealth = AIHealth - 10;
+				AIHealth = AIHealth - playerDamage1;
 				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
 			} else if (playerAttackNumber == 2 ) {
-				AIHealth = AIHealth - 20;
+				AIHealth = AIHealth - playerDamage2;
 				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
 			} else if (playerAttackNumber == 3 ) {
-				AIHealth = AIHealth - 30;
+				AIHealth = AIHealth - playerDamage3;
 				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
-			} 
+			}
+            else if (playerAttackNumber == 4)
+            {
+                AIHealth = AIHealth - playerDamage4;
+                AIHealthBar.value = Mathf.MoveTowards(AIHealth, 100.0f, 0.15f);
+            }
+            else if (playerAttackNumber == 5)
+            {
+                AIHealth = AIHealth - playerDamage5;
+                AIHealthBar.value = Mathf.MoveTowards(AIHealth, 100.0f, 0.15f);
+            }
+            else if (playerAttackNumber == 6)
+            {
+                AIHealth = AIHealth - playerDamage6;
+                AIHealthBar.value = Mathf.MoveTowards(AIHealth, 100.0f, 0.15f);
+            }
+            else if (playerAttackNumber == 7)
+            {
+                AIHealth = AIHealth - playerDamage7;
+                AIHealthBar.value = Mathf.MoveTowards(AIHealth, 100.0f, 0.15f);
+            }
+            else if (playerAttackNumber == 8)
+            {
+                AIHealth = AIHealth - playerDamage8;
+                AIHealthBar.value = Mathf.MoveTowards(AIHealth, 100.0f, 0.15f);
+                playerHealth = playerHealth + 20;
+                playerHealthBar.value = Mathf.MoveTowards(playerHealth, 100.0f, 0.15f);
+            }
 
-			else if (playerAttackNumber == 0) {
+            else if (playerAttackNumber == 0) {
 //				Debug.LogWarning ("player didn't attack");
 			}
 			else {

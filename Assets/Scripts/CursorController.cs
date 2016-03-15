@@ -13,7 +13,7 @@ public class CursorController : MonoBehaviour
     public FirstPersonController FPSC;
     public GameObject playeTorch;
     public GameObject sceneManager;
-
+    public GameObject tutorialEnemy;
     //raycast
     private Ray ray; // the ray that will be shot
     private RaycastHit hit; // variable to hold the object that is hit
@@ -302,6 +302,7 @@ public class CursorController : MonoBehaviour
                     keySymbol.SetActive(false);
                     iHaveKey = false;
                     Debug.Log("the chest is now open");
+                    tutorialEnemy.SetActive(true);
                     chest.GetComponent<Animation>().Play("ChestAnim");
                 }
             }

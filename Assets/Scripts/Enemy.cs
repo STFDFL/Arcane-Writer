@@ -27,10 +27,10 @@ public class Enemy : MonoBehaviour
     {
         distance = Vector3.Distance(target.position, transform.position);
 
-        Debug.Log(gameObject.name + " is " + distance + "the player");
+       // Debug.Log(gameObject.name + " is " + distance + "the player");
         if (distance < triggerDistance && isThisAlive == true)
         {
-            Debug.Log("combat has started");
+           Debug.Log("combat has started");
             textCombatScript.inCombat = true;
 
         }
