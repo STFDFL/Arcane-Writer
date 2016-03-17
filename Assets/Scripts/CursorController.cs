@@ -42,6 +42,11 @@ public class CursorController : MonoBehaviour
     //sounds
     public AudioClip inputPopUp;
     public AudioClip pushSpellSound;
+    public AudioClip takeTorchSound;
+    public AudioClip takeKeySound;
+    public AudioClip openChestSound;
+
+
     //spells
     public GameObject pushSymbol;
     private bool iLearnedPush = false;
@@ -290,6 +295,7 @@ public class CursorController : MonoBehaviour
                 GameObject cKey;
                 cKey = GameObject.FindGameObjectWithTag("chestKey1");
                 cKey.SetActive(false);
+                AudioSource.PlayClipAtPoint(takeKeySound, transform.position);
             }  
         }
         if (objectHitName == "chest1")
@@ -304,6 +310,7 @@ public class CursorController : MonoBehaviour
                     Debug.Log("the chest is now open");
                     tutorialEnemy.SetActive(true);
                     chest.GetComponent<Animation>().Play("ChestAnim");
+                    AudioSource.PlayClipAtPoint(openChestSound, transform.position);
                 }
             }
         }
@@ -315,6 +322,7 @@ public class CursorController : MonoBehaviour
                 hit.transform.gameObject.SetActive(false);
                 playeTorch.SetActive(true);
                 Debug.Log("torch taken");
+                AudioSource.PlayClipAtPoint(takeTorchSound, transform.position);
             }
         }
     }

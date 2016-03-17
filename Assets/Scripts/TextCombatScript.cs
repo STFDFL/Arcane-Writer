@@ -40,9 +40,16 @@ public class TextCombatScript : MonoBehaviour
     public int playerDamage7;
     public int playerDamage8;
 
-    //input varibles
+    //input variables
     public string combatAction;
     public InputField inputField;
+    // sounds variables
+    public GameObject battleSound;
+
+    //spells variables
+    public GameObject snakeVomit;
+    public AudioClip snakeVomitSound;
+    
 
     public void Start ()
     {
@@ -63,6 +70,7 @@ public class TextCombatScript : MonoBehaviour
 		timerBar.value = Mathf.MoveTowards (playerTurnTimer, 100.0f, 0.15f);
         enemy = enemy.GetComponent<Enemy>();
         FPSC = GameObject.FindObjectOfType<FirstPersonController>();
+        
     }
 
 	public void Update ()
@@ -72,6 +80,7 @@ public class TextCombatScript : MonoBehaviour
         { 
             FPSC.GetComponent<FirstPersonController>().enabled = false;
             combatUI.SetActive(true);
+            battleSound.SetActive(true);
             if (playerTurn == true)
             {
                 inputField.ActivateInputField();
@@ -111,7 +120,7 @@ public class TextCombatScript : MonoBehaviour
                     {
                         playerAttackNumber = 6;
                     }
-                    else if (combatAction == "brace yourself")
+                    else if (combatAction == "snake vomit")
                     {
                         playerAttackNumber = 7;
                     }
@@ -190,6 +199,7 @@ public class TextCombatScript : MonoBehaviour
                     inCombat = false;
                     enemy.isThisAlive = false;
                     combatUI.SetActive(false);
+                    battleSound.SetActive(false);
                     FPSC.GetComponent<FirstPersonController>().enabled = true;
                 }
                 
@@ -230,6 +240,8 @@ public class TextCombatScript : MonoBehaviour
             }
             else if (playerAttackNumber == 7)
             {
+                snakeVomit.SetActive(true);
+                AudioSource.PlayClipAtPoint(snakeVomitSound, transform.position);
                 AIHealth = AIHealth - playerDamage7;
                 AIHealthBar.value = Mathf.MoveTowards(AIHealth, 100.0f, 0.15f);
             }
@@ -270,7 +282,8 @@ public class TextCombatScript : MonoBehaviour
 		Debug.Log("Does this");
 		yield return new WaitForSeconds (2);
 		playerTurn = false;
-	}
+        snakeVomit.SetActive(false);
+    }
 	IEnumerator PlayerTurnTimer(){
 		yield return new WaitForSeconds (100000);
 
