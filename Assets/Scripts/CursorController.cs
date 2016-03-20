@@ -42,10 +42,11 @@ public class CursorController : MonoBehaviour
     //sounds
     public AudioClip inputPopUp;
     public AudioClip pushSpellSound;
+    public AudioClip doorBustingSound;
     public AudioClip takeTorchSound;
     public AudioClip takeKeySound;
     public AudioClip openChestSound;
-
+    public AudioClip monsterSound1;
 
     //spells
     public GameObject pushSymbol;
@@ -173,7 +174,7 @@ public class CursorController : MonoBehaviour
     public void HittingPushSpell()
     {
       
-        objectName.text = "Push Spell";
+        objectName.text = "WITCH SCREAM";
         wordsSuggested.text = "READ\n";
         objectHitName = "pushspell";
 
@@ -251,10 +252,12 @@ public class CursorController : MonoBehaviour
             {
                 itsAlreadyClosed.SetActive(true);
             }
-            else if (action == "push" && iLearnedPush == true)
+            else if (action == "witch scream" && iLearnedPush == true)
             {
-                cellDoorScript.pushIsApplied = true;
+                //cellDoorScript.pushIsApplied = true;
+                StartCoroutine(BustDoor());
                 AudioSource.PlayClipAtPoint(pushSpellSound, transform.position);
+                
             }
         }
         else if (objectHitName == "lever1")
@@ -308,9 +311,10 @@ public class CursorController : MonoBehaviour
                     keySymbol.SetActive(false);
                     iHaveKey = false;
                     Debug.Log("the chest is now open");
-                    tutorialEnemy.SetActive(true);
+                    StartCoroutine(MonsterAppear()); 
                     chest.GetComponent<Animation>().Play("ChestAnim");
                     AudioSource.PlayClipAtPoint(openChestSound, transform.position);
+                    
                 }
             }
         }
@@ -344,5 +348,19 @@ public class CursorController : MonoBehaviour
             FPSC.GetComponent<FirstPersonController>().enabled = false;
            
         }
+    }
+    IEnumerator BustDoor()
+    {
+        GameObject tutorialDoor = GameObject.Find("Tutorial Door");
+        CellDoor cellDoorScript = tutorialDoor.GetComponent<CellDoor>();
+        yield return new WaitForSeconds(2);
+        cellDoorScript.pushIsApplied = true;
+        AudioSource.PlayClipAtPoint(doorBustingSound, transform.position);
+    }
+    IEnumerator MonsterAppear()
+    {
+        tutorialEnemy.SetActive(true);
+        yield return new WaitForSeconds(3);
+        AudioSource.PlayClipAtPoint(monsterSound1, transform.position);
     }
 }
