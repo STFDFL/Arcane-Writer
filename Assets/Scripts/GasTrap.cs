@@ -9,14 +9,14 @@ using UnityStandardAssets.Characters.FirstPerson;
 public class GasTrap : MonoBehaviour
 {
     public FirstPersonController FPSC;
-    public GameObject gasParticle;
-    public AudioClip trapSound;
-    public AudioClip screamSound;
-    public bool trapEnabled = true;
+    //public AudioClip trapSound;
+    //public AudioClip screamSound;
+    public bool trapEnabled = false;
     private bool trapHasKilled = false;
+    public bool playerIsIn = false;
     public float gasTimeLeft;
     private float timeLeft = 5f;
-    public Animation trapAnimation;
+    //public Animation trapAnimation;
     // Use this for initialization
     void Start()
     {
@@ -26,36 +26,53 @@ public class GasTrap : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(trapEnabled == true)
+        
+
+        //if (trapHasKilled == true)
+        //{
+        //    FPSC.GetComponent<FirstPersonController>().enabled = false;
+        //    timeLeft -= Time.deltaTime;
+        //    if (timeLeft < 0)
+        //    {
+        //        SceneManager.LoadScene("Level 1");
+        //    }
+        //}
+    }
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
         {
-            ActivateGasTrap();
-        }
-        if (trapHasKilled == true)
-        {
-            FPSC.GetComponent<FirstPersonController>().enabled = false;
-            timeLeft -= Time.deltaTime;
-            if (timeLeft < 0)
-            {
-                SceneManager.LoadScene("Level 1");
-            }
+            Debug.Log("player enter!");
+            playerIsIn = true;
         }
     }
     void OnTriggerStay(Collider other)
     {
-        if(trapEnabled == true)
+        if (other.gameObject.tag == "Player")
         {
-            if (other.attachedRigidbody)
+            if (trapEnabled == true && playerIsIn == true)
             {
-
+                Debug.Log("trap activated");
+                ActivateGasTrap();
             }
+        }
+    }
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            Debug.Log("player is out!");
+            playerIsIn = false;
         }
     }
     public void ActivateGasTrap()
     {
-        gasParticle.SetActive(true);
+        ParticleSystem gasParticle =  gameObject.GetComponent<ParticleSystem>();
+        gasParticle.Emit(1);
+        //gasParticle.GetComponent<ParticleEmitter>().enabled = true;
         //gameObject.GetComponent<Animation>().Play("SpikeTrap");
-        AudioSource.PlayClipAtPoint(screamSound, transform.position);
-        AudioSource.PlayClipAtPoint(trapSound, transform.position);
+        //AudioSource.PlayClipAtPoint(screamSound, transform.position);
+        //AudioSource.PlayClipAtPoint(trapSound, transform.position);
         //trapHasKilled = true;
     }
 }
