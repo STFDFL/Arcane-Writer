@@ -25,7 +25,7 @@ public class CursorController : MonoBehaviour
     CursorLockMode wantedMode;
     bool isCursorLocked = false;
     public Image theCursor;
-    public Image theCursorWhenHitting;
+    public GameObject theCursorWhenHitting;
     //the action wrote by the player
     [HideInInspector]
     public string action;
@@ -73,9 +73,9 @@ public class CursorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
-        if (Input.anyKeyDown)
-        {
+      
+        //if (Input.anyKeyDown)
+      //  {
             // The Vector2 class holds the position for a point with only x and y coordinates
             // The center of the screen is calculated by dividing the width and height by half
             Vector2 screenCenterPoint = new Vector2(Screen.width / 2, Screen.height / 2);
@@ -85,6 +85,7 @@ public class CursorController : MonoBehaviour
             Debug.DrawRay(playerCamera.transform.position, screenCenterPoint, Color.green);
             if (Physics.Raycast(ray, out hit, raycastDistance))
             {
+            CheckAnyHitForCursor();
                 
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -134,8 +135,10 @@ public class CursorController : MonoBehaviour
                         wordsSuggested.text = "";
                     }
                 }
-            }
+            //}
+            
         }
+      
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if(isCursorLocked == false)
@@ -153,7 +156,7 @@ public class CursorController : MonoBehaviour
                 isCursorLocked = false;
             }
         }
-        
+       
     }
     // the following methods decide what to display in the input panel infos
     public void HittingTorch()
@@ -348,6 +351,22 @@ public class CursorController : MonoBehaviour
             FPSC.GetComponent<FirstPersonController>().enabled = false;
            
         }
+    }
+    public void CheckAnyHitForCursor()
+    {
+        Debug.Log(hit.transform.tag);
+        if (hit.transform.tag == "torch" ||
+            hit.transform.tag == "celldoor" ||
+            hit.transform.tag == "lever1" ||
+            hit.transform.tag == "spikeLever" ||
+            hit.transform.tag == "chestKey1" ||
+            hit.transform.tag == "chest1" ||
+            hit.transform.tag == "pushspell")
+        {
+            theCursorWhenHitting.SetActive(true);
+        }
+        else
+            theCursorWhenHitting.SetActive(false);
     }
     IEnumerator BustDoor()
     {
