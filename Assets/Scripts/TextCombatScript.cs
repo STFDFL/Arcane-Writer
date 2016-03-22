@@ -75,6 +75,7 @@ public class TextCombatScript : MonoBehaviour
 
 	public void Update ()
     {
+        playerHealthBar.value = Mathf.MoveTowards(playerHealth, 100.0f, .15f);
         combatAction = inputField.text;
         if (inCombat)
         { 

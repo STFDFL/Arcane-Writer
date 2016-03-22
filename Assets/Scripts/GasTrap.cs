@@ -9,15 +9,14 @@ using UnityStandardAssets.Characters.FirstPerson;
 public class GasTrap : MonoBehaviour
 {
     public FirstPersonController FPSC;
-    //public AudioClip trapSound;
-    //public AudioClip screamSound;
+ 
     public bool trapEnabled = false;
     private bool trapHasKilled = false;
     public bool playerIsIn = false;
     public float gasTimeLeft;
     private float timeLeft = 5f;
-    //public Animation trapAnimation;
-    // Use this for initialization
+    public GameObject sceneManager;
+    public float gasDamage;
     void Start()
     {
 
@@ -54,6 +53,7 @@ public class GasTrap : MonoBehaviour
             {
                 Debug.Log("trap activated");
                 ActivateGasTrap();
+                StartCoroutine(GasDamageOverTime());
             }
         }
     }
@@ -63,16 +63,20 @@ public class GasTrap : MonoBehaviour
         {
             Debug.Log("player is out!");
             playerIsIn = false;
+            StopCoroutine(GasDamageOverTime());
         }
     }
     public void ActivateGasTrap()
     {
         ParticleSystem gasParticle =  gameObject.GetComponent<ParticleSystem>();
         gasParticle.Emit(1);
-        //gasParticle.GetComponent<ParticleEmitter>().enabled = true;
-        //gameObject.GetComponent<Animation>().Play("SpikeTrap");
-        //AudioSource.PlayClipAtPoint(screamSound, transform.position);
-        //AudioSource.PlayClipAtPoint(trapSound, transform.position);
-        //trapHasKilled = true;
+    }
+    IEnumerator GasDamageOverTime()
+    {
+        TextCombatScript textCombatScript = sceneManager.GetComponent<TextCombatScript>();
+        yield return new WaitForSeconds(3);
+        textCombatScript.playerHealth = textCombatScript.playerHealth - (gasDamage * Time.deltaTime); 
+
+        //		Debug.Log ("This Happens");
     }
 }

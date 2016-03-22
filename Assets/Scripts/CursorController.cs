@@ -82,7 +82,7 @@ public class CursorController : MonoBehaviour
             // The method ScreenPointToRay needs to be called from a camera
             // Since we are using the MainCamera of our scene we can have access to it using the Camera.main
             ray = playerCamera.ScreenPointToRay(screenCenterPoint);
-            Debug.DrawRay(playerCamera.transform.position, screenCenterPoint, Color.green);
+           // Debug.DrawRay(playerCamera.transform.position, screenCenterPoint, Color.green);
             if (Physics.Raycast(ray, out hit, raycastDistance))
             {
             CheckAnyHitForCursor();
