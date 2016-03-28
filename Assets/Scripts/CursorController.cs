@@ -46,7 +46,7 @@ public class CursorController : MonoBehaviour
     public AudioClip takeTorchSound;
     public AudioClip takeKeySound;
     public AudioClip openChestSound;
-    public AudioClip monsterSound1;
+    
 
     //spells
     public GameObject pushSymbol;
@@ -314,10 +314,13 @@ public class CursorController : MonoBehaviour
                     keySymbol.SetActive(false);
                     iHaveKey = false;
                     Debug.Log("the chest is now open");
-                    StartCoroutine(MonsterAppear()); 
+                    //StartCoroutine(MonsterAppear()); 
                     chest.GetComponent<Animation>().Play("ChestAnim");
                     AudioSource.PlayClipAtPoint(openChestSound, transform.position);
-                    
+                    //// to activate the alarm trap
+                    GameObject alarmTrap = GameObject.Find("Alarm Trap");
+                    AlarmTrap alarmTrapScript = alarmTrap.GetComponent<AlarmTrap>();
+                    alarmTrapScript.actvateTrap = true;
                 }
             }
         }
@@ -352,6 +355,7 @@ public class CursorController : MonoBehaviour
            
         }
     }
+    // cursor shape function
     public void CheckAnyHitForCursor()
     {
         Debug.Log(hit.transform.tag);
@@ -376,10 +380,10 @@ public class CursorController : MonoBehaviour
         cellDoorScript.pushIsApplied = true;
         AudioSource.PlayClipAtPoint(doorBustingSound, transform.position);
     }
-    IEnumerator MonsterAppear()
-    {
-        tutorialEnemy.SetActive(true);
-        yield return new WaitForSeconds(3);
-        AudioSource.PlayClipAtPoint(monsterSound1, transform.position);
-    }
+    //IEnumerator MonsterAppear()
+    //{
+    //    tutorialEnemy.SetActive(true);
+    //    yield return new WaitForSeconds(3);
+    //    AudioSource.PlayClipAtPoint(monsterSound1, transform.position);
+    //}
 }
