@@ -7,62 +7,73 @@ using UnityEngine.EventSystems;
 using UnityStandardAssets.Characters.FirstPerson;
 using UnityStandardAssets.Characters.ThirdPerson;
 
-public class CursorController : MonoBehaviour
+
+ public class CursorController : MonoBehaviour
 {
+
     [HideInInspector]
     public FirstPersonController FPSC;
+
     public GameObject playeTorch;
     public GameObject sceneManager;
     public GameObject tutorialEnemy;
     //raycast
+    
     private Ray ray; // the ray that will be shot
     private RaycastHit hit; // variable to hold the object that is hit
+
+    [Header("Target and Cursor__________________________")]
+    [Space(3)]
     public Camera playerCamera;
     public InputField inputField;
     public float raycastDistance;
-    
-    //cursor
     CursorLockMode wantedMode;
     bool isCursorLocked = false;
     public Image theCursor;
     public GameObject theCursorWhenHitting;
+
     //the action wrote by the player
     [HideInInspector]
     public string action;
     //the object hit by the raycast to check against the action chose by the player
     [HideInInspector]
     public string objectHitName;
-    
 
-    //input panel and suggestions variables
+    [Header("Input Panel / Suggestion Words __________________________")]
+    [Space(3)]
     public GameObject panel;
     public Text objectName;
     public Text wordsSuggested;
 
-    //sounds
+
+    [Header("Spells____________________________________________________")]
+    [Space(3)]
+    public GameObject pushSymbol;
+    private bool iLearnedPush = false;
+
+    [Header("Collected Objects__________________________")]
+    [Space(3)]
+    public GameObject keySymbol;
+    public bool iHaveKey = false;
+
+    [Header("Messages Popping Up After Action__________________________")]
+    [Space(3)]
+    public GameObject itsLocked;
+    public GameObject itsAlreadyClosed;
+
+    [Header("Sounds____________________________________________________")]
+
+    [Space(3)]
     public AudioClip inputPopUp;
     public AudioClip pushSpellSound;
     public AudioClip doorBustingSound;
     public AudioClip takeTorchSound;
     public AudioClip takeKeySound;
     public AudioClip openChestSound;
-    
-
-    //spells
-    public GameObject pushSymbol;
-    private bool iLearnedPush = false;
-
-    //objects
-    public GameObject keySymbol;
-    public bool iHaveKey = false;
-    //messages popping up
-    public GameObject itsLocked;
-    public GameObject itsAlreadyClosed;
-
-    
     // Use this for initialization
     void Start()
     {
+       
         //Cursor.lockState = CursorLockMode.Locked;
         panel.SetActive(false);
         FPSC = GameObject.FindObjectOfType<FirstPersonController>();
