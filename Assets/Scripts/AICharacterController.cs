@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 using System.Collections;
 
+
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
     [RequireComponent(typeof(NavMeshAgent))]
@@ -12,16 +13,19 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         public NavMeshAgent agent { get; private set; }             // the navmesh agent required for the path finding
         public ThirdPersonCharacter character { get; private set; } // the character we are controlling
         public Transform target;                                    // target to aim for
-        private float distance;
-        private float distanceToSpawnPoint;
-        public float triggerDistance;
-        public float aggroDistance;
+
+        [SerializeField]
+        private float distance; // actual between enemy and player
+        [SerializeField]
+        private float distanceToSpawnPoint; // between enemy and indexed spawn point?
+        public float triggerDistance; // between enemy and player, trigger combat
+        public float aggroDistance; // between enemy and player, trigger state -chasing-
         public FirstPersonController FPSC;
         public GameObject sceneManager;
         public Transform spawnPoint;
         public Transform patrolTarget;
         private states state;
-        float smoothing = 0.01f;
+       
         public Transform[] patrolPoints;
         enum states
         {
@@ -33,42 +37,44 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         private void Start()
         {
+            
             state = states.roaming;
             // get the components on the object we need ( should not be null due to require component so no need to check )
             agent = GetComponentInChildren<NavMeshAgent>();
             character = GetComponent<ThirdPersonCharacter>();
-
             agent.updateRotation = false;
             agent.updatePosition = true;
-
-            distance = Vector3.Distance(target.position, transform.position);
             //Debug.Log(gameObject.name + " is " + distance + "the player");
+            index = UnityEngine.Random.Range(0, patrolPoints.Length);
+            patrolTarget = patrolPoints[index];
         }
 
 
         private void Update()
         {
             
-            distanceToSpawnPoint = Vector3.Distance(spawnPoint.position, transform.position);
+            
             distance = Vector3.Distance(target.position, transform.position);
-            Debug.Log(gameObject.name + " is " + distance + "the player");
+           // Debug.Log(gameObject.name + " is " + distance + "the player");
             switch (state)
             {
                 case states.roaming:
-                    Debug.Log("im roaming");
+                   
                     
-                    agent.SetDestination(spawnPoint.position);
-                    
-                    patrolTarget = patrolPoints[index];
+                    //agent.SetDestination(spawnPoint.position);
+
+                   
+                    distanceToSpawnPoint = Vector3.Distance(patrolTarget.position, transform.position);
                     StartCoroutine(ChangePatrolPoint());
+                    Debug.Log("im roaming");
                     if (distance > triggerDistance && distance < aggroDistance)
                     {
+                        StopCoroutine(ChangePatrolPoint());
                         if (target != null)
                             state = states.chasing;
-                        StopCoroutine(ChangePatrolPoint());
+                       
                         
                     }
-                    
                     break;
 
                 case states.chasing:
@@ -84,8 +90,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     {
                         if (target != null)
                             state = states.stopChasing;
-                    }
-                    
+                    }                   
                     break;
 
                 case states.stopChasing:
@@ -94,17 +99,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     state = states.roaming;
                     Debug.Log("i stopped chasing");
                     break;
-            }
-             
-           
-               
+            }     
 
             if (distance < triggerDistance)
             {
-               
                 gameObject.GetComponent<NavMeshAgent>().enabled = false;
-                FPSC.GetComponent<FirstPersonController>().enabled = false;
-                
+                FPSC.GetComponent<FirstPersonController>().enabled = false; 
             }
         }
 
@@ -115,19 +115,17 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         }
         IEnumerator ChangePatrolPoint()
         {
-            
-            
-            while (Vector3.Distance(transform.position, patrolTarget.position) > 0.05f)
+            index = UnityEngine.Random.Range(0, patrolPoints.Length);
+            patrolTarget = patrolPoints[index];
+            while (distanceToSpawnPoint > 5)
             {
-                transform.position = Vector3.Lerp(transform.position, patrolTarget.position, smoothing * Time.deltaTime);
-
+                gameObject.transform.position = Vector3.Lerp(transform.position, patrolTarget.position, Time.deltaTime * 0.2f);
+                //agent.SetDestination(patrolTarget.position);
                 yield return null;
             }
+            yield return new WaitForSeconds(4f);
+            index = UnityEngine.Random.Range(0, patrolPoints.Length);
             
-            
-            //agent.SetDestination(patrolTarget.position);
-            
-
             print("Reached the target.");
 
             
