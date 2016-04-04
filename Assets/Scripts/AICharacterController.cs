@@ -17,9 +17,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         [SerializeField]
         private float distanceToPlayer; // updated distance between enemy and player
         [SerializeField]
-        private float distanceToSpawnPoint; // updated distance between enemy and indexed spawn point
+        private float distanceToPatrolPoint; // updated distance between enemy and indexed spawn point
         [SerializeField]
         private bool playerIsSpotted = false;
+        [SerializeField]
+        private int index;
+        [SerializeField]
+        private int previousIndex;
+
         public float triggerDistance; // between enemy and player, trigger combat
         public float aggroDistance; // between enemy and player, trigger state -chasing-
         public FirstPersonController FPSC;
@@ -27,6 +32,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         public Transform spawnPoint;
         public Transform patrolTarget;
         private states state;
+
        
         public float roamingSpeed;
         public Transform[] patrolPoints;
@@ -36,7 +42,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             chasing,
             stopChasing
         }
-        int index;
+        
 
         private void Start()
         {
@@ -55,7 +61,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         private void Update()
         {
-            distanceToSpawnPoint = Vector3.Distance(patrolTarget.position, transform.position);
+            
+            distanceToPatrolPoint = Vector3.Distance(patrolTarget.position, transform.position);
 
             distanceToPlayer = Vector3.Distance(target.position, transform.position);
            // Debug.Log(gameObject.name + " is " + distance + "the player");
@@ -100,7 +107,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
                 case states.stopChasing:
                     agent.SetDestination(spawnPoint.position);
-                    if(distanceToSpawnPoint <= 1)
+                    if(distanceToPatrolPoint <= 1)
                     state = states.roaming;
                     Debug.Log("i stopped chasing");
                     break;
@@ -120,15 +127,22 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         }
         IEnumerator ChangePatrolPoint()
         {
-            while (distanceToSpawnPoint > 5 && playerIsSpotted == false)
+            while (distanceToPatrolPoint > 3 && playerIsSpotted == false)
             {
                 
                 gameObject.transform.position = Vector3.Lerp(transform.position, patrolTarget.position, Time.deltaTime * roamingSpeed);
                 //agent.SetDestination(patrolTarget.position);
                 yield return null;
             }
-            yield return new WaitForSeconds(4f);
+            //yield return new WaitForSeconds(4f);
+            previousIndex = index;
             index = UnityEngine.Random.Range(0, patrolPoints.Length);
+            
+            while (index == previousIndex)
+            {
+                index = UnityEngine.Random.Range(0, patrolPoints.Length);
+            }
+            
             Debug.Log("" + index);
             patrolTarget = patrolPoints[index];        
             print("Reached the target.");
