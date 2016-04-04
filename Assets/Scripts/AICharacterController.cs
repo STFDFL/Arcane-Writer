@@ -15,9 +15,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         public Transform target;                                    // target to aim for
 
         [SerializeField]
-        private float distance; // actual between enemy and player
+        private float distanceToPlayer; // updated distance between enemy and player
         [SerializeField]
-        private float distanceToSpawnPoint; // between enemy and indexed spawn point?
+        private float distanceToSpawnPoint; // updated distance between enemy and indexed spawn point
+        [SerializeField]
+        private bool playerIsSpotted = false;
         public float triggerDistance; // between enemy and player, trigger combat
         public float aggroDistance; // between enemy and player, trigger state -chasing-
         public FirstPersonController FPSC;
@@ -26,6 +28,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         public Transform patrolTarget;
         private states state;
        
+        public float roamingSpeed;
         public Transform[] patrolPoints;
         enum states
         {
@@ -44,7 +47,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             character = GetComponent<ThirdPersonCharacter>();
             agent.updateRotation = false;
             agent.updatePosition = true;
-            //Debug.Log(gameObject.name + " is " + distance + "the player");
+            //randomly pick the first patrol point to go to
             index = UnityEngine.Random.Range(0, patrolPoints.Length);
             patrolTarget = patrolPoints[index];
         }
@@ -52,28 +55,26 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         private void Update()
         {
-            
-            
-            distance = Vector3.Distance(target.position, transform.position);
+            distanceToSpawnPoint = Vector3.Distance(patrolTarget.position, transform.position);
+
+            distanceToPlayer = Vector3.Distance(target.position, transform.position);
            // Debug.Log(gameObject.name + " is " + distance + "the player");
             switch (state)
             {
                 case states.roaming:
-                   
                     
-                    //agent.SetDestination(spawnPoint.position);
-
-                   
-                    distanceToSpawnPoint = Vector3.Distance(patrolTarget.position, transform.position);
+                    //distanceToSpawnPoint = Vector3.Distance(patrolTarget.position, transform.position);
                     StartCoroutine(ChangePatrolPoint());
                     Debug.Log("im roaming");
-                    if (distance > triggerDistance && distance < aggroDistance)
+                    if ( distanceToPlayer < aggroDistance)
+                    {
+                        playerIsSpotted = true;
+                         
+                    }
+                    if(playerIsSpotted)
                     {
                         StopCoroutine(ChangePatrolPoint());
-                        if (target != null)
-                            state = states.chasing;
-                       
-                        
+                        state = states.chasing;
                     }
                     break;
 
@@ -86,10 +87,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                         character.Move(agent.desiredVelocity, false, false);
                     else
                         character.Move(Vector3.zero, false, false);
-                    if (distance > aggroDistance)
+                    if (distanceToPlayer > aggroDistance)
                     {
                         if (target != null)
-                            state = states.stopChasing;
+                        {
+                            playerIsSpotted = false;
+                            state = states.roaming;
+                        }
+                            
                     }                   
                     break;
 
@@ -101,7 +106,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     break;
             }     
 
-            if (distance < triggerDistance)
+            if (distanceToPlayer < triggerDistance)
             {
                 gameObject.GetComponent<NavMeshAgent>().enabled = false;
                 FPSC.GetComponent<FirstPersonController>().enabled = false; 
@@ -115,20 +120,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         }
         IEnumerator ChangePatrolPoint()
         {
-            index = UnityEngine.Random.Range(0, patrolPoints.Length);
-            patrolTarget = patrolPoints[index];
-            while (distanceToSpawnPoint > 5)
+            while (distanceToSpawnPoint > 5 && playerIsSpotted == false)
             {
-                gameObject.transform.position = Vector3.Lerp(transform.position, patrolTarget.position, Time.deltaTime * 0.2f);
+                
+                gameObject.transform.position = Vector3.Lerp(transform.position, patrolTarget.position, Time.deltaTime * roamingSpeed);
                 //agent.SetDestination(patrolTarget.position);
                 yield return null;
             }
             yield return new WaitForSeconds(4f);
             index = UnityEngine.Random.Range(0, patrolPoints.Length);
-            
+            Debug.Log("" + index);
+            patrolTarget = patrolPoints[index];        
             print("Reached the target.");
-
-            
         }
     }
 }
