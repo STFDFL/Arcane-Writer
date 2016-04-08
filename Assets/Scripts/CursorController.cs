@@ -70,6 +70,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     public AudioClip takeTorchSound;
     public AudioClip takeKeySound;
     public AudioClip openChestSound;
+    public AudioClip lootingSound;
     // Use this for initialization
     void Start()
     {
@@ -138,7 +139,12 @@ using UnityStandardAssets.Characters.ThirdPerson;
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingChest();
                     }
-                    else 
+                    else if (hit.transform.tag == "lootable")
+                    {
+                        AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
+                        HittingLootable();
+                    }
+                else 
                     {
                         inputField.text = "";
                         panel.SetActive(false);
@@ -223,6 +229,14 @@ using UnityStandardAssets.Characters.ThirdPerson;
         objectName.text = "Chest";
         wordsSuggested.text = "Open";
         objectHitName = "chest1";
+
+    }
+    public void HittingLootable()
+    {
+
+        objectName.text = "Crate";
+        wordsSuggested.text = "Loot";
+        objectHitName = "lootable";
 
     }
     // Method to lock and center cursor 
@@ -346,6 +360,17 @@ using UnityStandardAssets.Characters.ThirdPerson;
                 AudioSource.PlayClipAtPoint(takeTorchSound, transform.position);
             }
         }
+        if (objectHitName == "lootable")
+        {
+
+            if (action == "loot")
+            {
+                Debug.Log("looting");
+                AudioSource.PlayClipAtPoint(lootingSound, transform.position);
+                LootThis lootableObj = hit.transform.GetComponent<LootThis>();
+                lootableObj.Loot();
+            }
+        }
     }
 
     public void CheckAnyHit()
@@ -357,6 +382,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
             hit.transform.tag == "spikeLever" ||
             hit.transform.tag == "chestKey1" ||
             hit.transform.tag == "chest1" ||
+            hit.transform.tag == "lootable" ||
             hit.transform.tag == "pushspell")
         {
             
@@ -376,6 +402,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
             hit.transform.tag == "spikeLever" ||
             hit.transform.tag == "chestKey1" ||
             hit.transform.tag == "chest1" ||
+            hit.transform.tag == "lootable" ||
             hit.transform.tag == "pushspell")
         {
             theCursorWhenHitting.SetActive(true);
