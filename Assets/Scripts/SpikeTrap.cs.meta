@@ -1,10 +1,14 @@
 fileFormatVersion: 2
 guid: d33f027f244f7f746aa8f085b7900425
-timeCreated: 1456831946
+timeCreated: 1460284839
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - FPSC: {instanceID: 0}
+  - trapSound: {fileID: 8300000, guid: c12d8c191a5c55746a39a02a79ac90bf, type: 3}
+  - screamSound: {fileID: 8300000, guid: ac2af75e23a8935488bc7db368d757bb, type: 3}
+  - trapAnimation: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
