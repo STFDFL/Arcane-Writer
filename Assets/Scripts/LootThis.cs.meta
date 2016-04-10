@@ -1,10 +1,13 @@
 fileFormatVersion: 2
 guid: 0d9fc91d50c75e64b84cf5b5a675d989
-timeCreated: 1459744252
-licenseType: Pro
+timeCreated: 1460278283
+licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - coinEffect: {fileID: 100000, guid: 7273d1f37db7b2f4c89295644986c5f0, type: 2}
+  - potionEffect: {fileID: 100000, guid: bf4716d237eea6b4c87495800941e336, type: 2}
+  - nothingEffect: {fileID: 100000, guid: bc9d63de069b07a4680d0b539cc2e18a, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
