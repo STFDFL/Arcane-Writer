@@ -10,19 +10,22 @@ public class InventoryManager : MonoBehaviour
     private int healthPotCollected;
     [SerializeField]
     private int healthPotUsed;
-    [SerializeField]
-    private int healthPotInInventory;
+    public int healthPotInInventory;
     public Text potionsText;
     public Text coinsText;
+    public float potionPower;
+    GameObject sceneManager;
+    TextCombatScript combatManager;
     // Use this for initialization
     void Start ()
     {
         coinsCollected = 0;
         healthPotCollected = 0;
-        healthPotInInventory = 0;
+        //healthPotInInventory = 0;
         healthPotUsed = 0;
-
-	}
+        sceneManager = GameObject.Find("SceneManager");
+        combatManager = sceneManager.GetComponent<TextCombatScript>();
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -32,6 +35,17 @@ public class InventoryManager : MonoBehaviour
         PlayerPrefs.SetInt("potionsInv", healthPotInInventory);
         potionsText.text = healthPotInInventory.ToString();
         coinsText.text = coinsCollected.ToString();
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            if(healthPotInInventory >0)
+            {
+                combatManager.playerHealth = combatManager.playerHealth + potionPower;
+                combatManager.playerHealthBar.value = Mathf.MoveTowards(combatManager.playerHealth, 100.0f, 0.15f);
+                healthPotUsed++;
+                healthPotInInventory--;
+            }
+        }
     }
     public void PotionFound()
     {

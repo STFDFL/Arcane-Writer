@@ -10,6 +10,10 @@ public class CrushingWallsTrap : MonoBehaviour {
     public bool wallsAreMoving = false;
     public Transform leftWallsT;
     public Transform rightWallsT;
+
+	public AudioClip movingWallsSound;
+	public AudioClip stopWallsSound;
+	public AudioClip pPSound;
     // Use this for initialization
     void Start ()
     {
@@ -19,20 +23,21 @@ public class CrushingWallsTrap : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        float distL = Vector3.Distance(leftWallsT.position, transform.position);
-        float distR = Vector3.Distance(rightWallsT.position, transform.position);
+		float distL = Vector3.Distance(leftWallsT.position, pressurePlate.transform.position);
+		float distR = Vector3.Distance(rightWallsT.position, pressurePlate.transform.position);
         if (wallsAreMoving == true)
         {
-            leftWalls.transform.Translate(Vector3.right * Time.deltaTime * speed);
-            rightWalls.transform.Translate(Vector3.left * Time.deltaTime * speed);
+            leftWalls.transform.Translate(Vector3.forward * Time.deltaTime * speed);
+            rightWalls.transform.Translate(Vector3.back * Time.deltaTime * speed);
             if (leftWallsT && rightWallsT)
             {
-               
+				AudioSource.PlayClipAtPoint(movingWallsSound, transform.position);
                 Debug.Log("distL:"+distL);
                 Debug.Log("distR:"+distR);
-                if (distL <= 0.75f && distR <= 0.75f)
+                if (distL >= 5f && distR >= 4.5f)
                 {
                     wallsAreMoving = false;
+					AudioSource.PlayClipAtPoint(stopWallsSound, transform.position);
                 }
             }
         }
@@ -41,6 +46,7 @@ public class CrushingWallsTrap : MonoBehaviour {
     {
         if (other.gameObject.tag == "Player")
         {
+			AudioSource.PlayClipAtPoint(pPSound, transform.position);
             Debug.Log("player enter!");
             pressurePlate.transform.Translate(Vector3.down * Time.deltaTime * speed);
             playerActivateTrap = true;
