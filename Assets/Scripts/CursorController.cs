@@ -16,7 +16,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
 
     public GameObject playeTorch;
     public GameObject sceneManager;
-    public GameObject tutorialEnemy;
+    //public GameObject tutorialEnemy;
     //raycast
     
     private Ray ray; // the ray that will be shot
@@ -105,6 +105,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
                     if (hit.transform.tag == "torch")
                     {
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
+					Debug.Log("1");
                         HittingTorch();
                       
                     }
@@ -178,7 +179,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     // the following methods decide what to display in the input panel infos
     public void HittingTorch()
     {
-       
+		Debug.Log("2");
         objectName.text = "A Torch";
         wordsSuggested.text = "TAKE\n" +"BLOW\n" +"TOUCH";
         objectHitName = "torch";

@@ -34,7 +34,7 @@ public class CrushingWallsTrap : MonoBehaviour {
 				AudioSource.PlayClipAtPoint(movingWallsSound, transform.position);
                 Debug.Log("distL:"+distL);
                 Debug.Log("distR:"+distR);
-                if (distL >= 5f && distR >= 4.5f)
+                if (distL >= 5.1f && distR >= 4.6f)
                 {
                     wallsAreMoving = false;
 					AudioSource.PlayClipAtPoint(stopWallsSound, transform.position);
