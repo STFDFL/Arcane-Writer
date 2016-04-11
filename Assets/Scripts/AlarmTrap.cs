@@ -6,11 +6,11 @@ public class AlarmTrap : MonoBehaviour
     public bool actvateTrap;
     public AudioClip alarmSound;
     public AudioClip monsterSound;
-    public GameObject[] spawnPoints;
+    //public GameObject[] spawnPoints;
     public GameObject[] enemies;
-    GameObject spawnPointChosen;
+    //GameObject spawnPointChosen;
     GameObject enemyChosen;
-    int spawnIndex;
+   // int spawnIndex;
     int enemyIndex;
 
     // Use this for initialization
@@ -26,12 +26,12 @@ public class AlarmTrap : MonoBehaviour
         {
             Debug.Log("Alarm is On");
             AudioSource.PlayClipAtPoint(alarmSound, transform.position);
-            spawnIndex = Random.Range(0, spawnPoints.Length);
+            //spawnIndex = Random.Range(0, spawnPoints.Length);
             enemyIndex = Random.Range(0, enemies.Length);
-            spawnPointChosen = spawnPoints[spawnIndex];
+            //spawnPointChosen = spawnPoints[spawnIndex];
             enemyChosen = enemies[enemyIndex];
             enemyChosen.SetActive(true);
-            enemyChosen.transform.position = spawnPointChosen.transform.position;
+            //enemyChosen.transform.position = spawnPointChosen.transform.position;
             AudioSource.PlayClipAtPoint(monsterSound, transform.position);
             actvateTrap = false;
         }

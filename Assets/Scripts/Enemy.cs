@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour
     private TextCombatScript textCombatScript;
     public FirstPersonController FPSC;
     public GameObject sceneManager;
-    [HideInInspector]
+  
     public bool isThisAlive = true;
     public float triggerDistance;
     public Transform target;
@@ -37,7 +37,10 @@ public class Enemy : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
-
+		if (textCombatScript.AIHealth <= 0) {
+			gameObject.SetActive (false);
+			textCombatScript.playerAttackNumber = 0;
+		}
     }
     public void AIState()
     {

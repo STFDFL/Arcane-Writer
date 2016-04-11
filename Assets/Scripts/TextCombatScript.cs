@@ -274,6 +274,7 @@ public class TextCombatScript : MonoBehaviour
 //				Debug.LogWarning ("AI attack failed");
 			}
 		}
+		playerAttackNumber = 0;
 	}
 
 	IEnumerator Wait(){
