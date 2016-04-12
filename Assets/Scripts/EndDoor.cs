@@ -4,20 +4,20 @@ using System.Collections;
 public class EndDoor : MonoBehaviour {
 
     GameObject triggerObject;
-    GasTrap gasTrap;
+    AlarmTrap alarmTrap;
     public GameObject openDoor;
     public GameObject closedDoor;
     // Use this for initialization
     void Start ()
     {
-        triggerObject = GameObject.Find("Gas Trap");
-        gasTrap = triggerObject.GetComponent<GasTrap>();
+        triggerObject = GameObject.Find("Alarm Trap");
+        alarmTrap = triggerObject.GetComponent<AlarmTrap>();
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-	if(gasTrap.trapEnabled == true)
+		if(alarmTrap.actvateTrap == true)
         {
             closedDoor.SetActive(false);
             openDoor.SetActive(true);
