@@ -5,13 +5,14 @@ using UnityStandardAssets.Characters.FirstPerson;
 public class Enemy : MonoBehaviour
 {
     private float distance;
-    private TextCombatScript textCombatScript;
+    private TextCombatScript4 textCombatScript;
     public FirstPersonController FPSC;
     public GameObject sceneManager;
   
     public bool isThisAlive = true;
     public float triggerDistance;
     public Transform target;
+    public bool combatOn;
    
 
 
@@ -20,7 +21,7 @@ public class Enemy : MonoBehaviour
     void Start ()
     {
    
-        textCombatScript = sceneManager.GetComponent<TextCombatScript>();
+        textCombatScript = sceneManager.GetComponent<TextCombatScript4>();
     }
 	
 	// Update is called once per frame
@@ -32,10 +33,12 @@ public class Enemy : MonoBehaviour
         {
            Debug.Log("combat has started");
             textCombatScript.inCombat = true;
+            combatOn = true;
         }
         else if(isThisAlive == false)
         {
             gameObject.SetActive(false);
+            combatOn = false;
         }
 		if (textCombatScript.AIHealth <= 0) {
 			gameObject.SetActive (false);

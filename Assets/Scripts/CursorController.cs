@@ -39,29 +39,29 @@ using UnityStandardAssets.Characters.ThirdPerson;
     [HideInInspector]
     public string objectHitName;
 
-    [Header("Input Panel / Suggestion Words __________________________")]
+    [Header("Input Panel / Suggestion Words")]
     [Space(3)]
     public GameObject panel;
     public Text objectName;
     public Text wordsSuggested;
 
 
-    [Header("Spells____________________________________________________")]
+    [Header("Spells")]
     [Space(3)]
     public GameObject pushSymbol;
     private bool iLearnedPush = false;
 
-    [Header("Collected Objects__________________________")]
+    [Header("Collected Objects")]
     [Space(3)]
     public GameObject keySymbol;
     public bool iHaveKey = false;
 
-    [Header("Messages Popping Up After Action__________________________")]
+    [Header("Messages Popping Up After Action")]
     [Space(3)]
     public GameObject itsLocked;
     public GameObject itsAlreadyClosed;
 
-    [Header("Sounds____________________________________________________")]
+    [Header("Sounds")]
 
     [Space(3)]
     public AudioClip inputPopUp;
@@ -76,19 +76,14 @@ using UnityStandardAssets.Characters.ThirdPerson;
     void Start()
     {
        
-        //Cursor.lockState = CursorLockMode.Locked;
         panel.SetActive(false);
         FPSC = GameObject.FindObjectOfType<FirstPersonController>();
         TextCombatScript textCombatScript = sceneManager.GetComponent<TextCombatScript>();
-
     }
 
     // Update is called once per frame
     void Update()
     {
-      
-        //if (Input.anyKeyDown)
-      //  {
             // The Vector2 class holds the position for a point with only x and y coordinates
             // The center of the screen is calculated by dividing the width and height by half
             Vector2 screenCenterPoint = new Vector2(Screen.width / 2, Screen.height / 2);
@@ -141,10 +136,20 @@ using UnityStandardAssets.Characters.ThirdPerson;
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingChest();
                     }
+                    else if (hit.transform.tag == "chestGas")
+                    {
+                        AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
+                        HittingChestGas();
+                    }
+                    else if (hit.transform.tag == "chestT")
+                    {
+                        AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
+                        HittingChestT();
+                    }
                     else if (hit.transform.tag == "SquareDoor" || hit.transform.tag == "CurvedDoor")
                     {
-                    Debug.Log(3);
-                    AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
+                        Debug.Log(3);
+                        AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                        HittingSquareDoor();
                     }
                     else if (hit.transform.tag == "lootable")
@@ -159,9 +164,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
                         objectName.text = "";
                         wordsSuggested.text = "";
                     }
-                }
-            //}
-            
+                }   
         }
       
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -236,6 +239,22 @@ using UnityStandardAssets.Characters.ThirdPerson;
         objectName.text = "Chest";
         wordsSuggested.text = "Open";
         objectHitName = "chest1";
+
+    }
+    public void HittingChestGas()
+    {
+
+        objectName.text = "Chest";
+        wordsSuggested.text = "Open";
+        objectHitName = "chestGas";
+
+    }
+    public void HittingChestT()
+    {
+
+        objectName.text = "Chest";
+        wordsSuggested.text = "Open";
+        objectHitName = "chestT";
 
     }
     public void HittingLootable()
@@ -366,7 +385,6 @@ using UnityStandardAssets.Characters.ThirdPerson;
                     keySymbol.SetActive(false);
                     iHaveKey = false;
                     Debug.Log("the chest is now open");
-                    //StartCoroutine(MonsterAppear()); 
                     chest.GetComponent<Animation>().Play("ChestAnim");
                     AudioSource.PlayClipAtPoint(openChestSound, transform.position);
                     //// to activate the alarm trap
@@ -375,6 +393,31 @@ using UnityStandardAssets.Characters.ThirdPerson;
                     alarmTrapScript.actvateTrap = true;
                 }
             }
+        }
+        if (objectHitName == "chestGas")
+        {
+            GameObject chestGas = GameObject.Find("chestGas");
+            GameObject chestGasTrap = GameObject.Find("gasT");
+            GasTrap gasTrap = chestGasTrap.GetComponent<GasTrap>();
+            if (action == "open")
+                {
+                
+                chestGas.GetComponent<Animation>().Play("ChestAnim");
+                    AudioSource.PlayClipAtPoint(openChestSound, transform.position);
+                gasTrap.trapEnabled = true;
+                }
+            
+        }
+        if (objectHitName == "chestT")
+        {
+            GameObject chestT = GameObject.Find("chestT");
+                if (action == "open")
+                {
+                    chestT.GetComponent<Animation>().Play("ChestAnim");
+                    AudioSource.PlayClipAtPoint(openChestSound, transform.position);
+             
+                }
+            
         }
         if (objectHitName == "torch")
         {
@@ -409,6 +452,8 @@ using UnityStandardAssets.Characters.ThirdPerson;
             hit.transform.tag == "spikeLever" ||
             hit.transform.tag == "chestKey1" ||
             hit.transform.tag == "chest1" ||
+            hit.transform.tag == "chestGas" ||
+            hit.transform.tag == "chestT" ||
             hit.transform.tag == "lootable" ||
             hit.transform.tag == "SquareDoor" ||
             hit.transform.tag == "CurvedDoor" ||
@@ -433,6 +478,8 @@ using UnityStandardAssets.Characters.ThirdPerson;
             hit.transform.tag == "SquareDoor" ||
             hit.transform.tag == "CurvedDoor"||
             hit.transform.tag == "chest1" ||
+            hit.transform.tag == "chestGas" ||
+            hit.transform.tag == "chestT" ||
             hit.transform.tag == "lootable" ||
             hit.transform.tag == "pushspell")
         {
