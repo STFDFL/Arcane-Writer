@@ -26,7 +26,8 @@ public class ExitLevel : MonoBehaviour {
 
             if (other.gameObject.tag == "Player")
             {
-            SceneManager.LoadScene(nextLevel);
+            //SceneManager.LoadScene(nextLevel);
+            Application.LoadLevel(nextLevel);
                 Debug.Log("going to next scene!");
                
             }
