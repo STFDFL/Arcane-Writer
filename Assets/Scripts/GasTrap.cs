@@ -26,16 +26,6 @@ public class GasTrap : MonoBehaviour
     void Update()
     {
         
-
-        //if (trapHasKilled == true)
-        //{
-        //    FPSC.GetComponent<FirstPersonController>().enabled = false;
-        //    timeLeft -= Time.deltaTime;
-        //    if (timeLeft < 0)
-        //    {
-        //        SceneManager.LoadScene("Level 1");
-        //    }
-        //}
     }
     void OnTriggerEnter(Collider other)
     {

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class InventoryManager : MonoBehaviour
 {
     [SerializeField]
+    private int keysCollected;
+    [SerializeField]
     private int coinsCollected;
     [SerializeField]
     private int healthPotCollected;
@@ -13,6 +15,7 @@ public class InventoryManager : MonoBehaviour
     public int healthPotInInventory;
     public Text potionsText;
     public Text coinsText;
+    public Text keysText;
     public float potionPower;
     GameObject sceneManager;
     TextCombatScript combatManager;
@@ -30,11 +33,13 @@ public class InventoryManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        PlayerPrefs.SetInt("keysColl", keysCollected);
         PlayerPrefs.SetInt("coinsColl",coinsCollected);
         PlayerPrefs.SetInt("potionsColl",healthPotCollected);
         PlayerPrefs.SetInt("potionsInv", healthPotInInventory);
         potionsText.text = healthPotInInventory.ToString();
         coinsText.text = coinsCollected.ToString();
+        keysText.text = keysCollected.ToString();
 
         if (Input.GetKeyDown(KeyCode.H))
         {
@@ -57,5 +62,8 @@ public class InventoryManager : MonoBehaviour
     {
         coinsCollected++;
     }
-    
+    public void KeyFound()
+    {
+        keysCollected++;
+    }
 }
