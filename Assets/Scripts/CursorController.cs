@@ -71,6 +71,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     public AudioClip takeKeySound;
     public AudioClip openChestSound;
     public AudioClip lootingSound;
+    public AudioClip openDoor;
     // Use this for initialization
     void Start()
     {
@@ -140,6 +141,12 @@ using UnityStandardAssets.Characters.ThirdPerson;
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingChest();
                     }
+                    else if (hit.transform.tag == "SquareDoor" || hit.transform.tag == "CurvedDoor")
+                    {
+                    Debug.Log(3);
+                    AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
+                       HittingSquareDoor();
+                    }
                     else if (hit.transform.tag == "lootable")
                     {
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
@@ -179,7 +186,6 @@ using UnityStandardAssets.Characters.ThirdPerson;
     // the following methods decide what to display in the input panel infos
     public void HittingTorch()
     {
-		Debug.Log("2");
         objectName.text = "A Torch";
         wordsSuggested.text = "TAKE\n" +"BLOW\n" +"TOUCH";
         objectHitName = "torch";
@@ -240,6 +246,14 @@ using UnityStandardAssets.Characters.ThirdPerson;
         objectHitName = "lootable";
 
     }
+    public void HittingSquareDoor()
+    {
+        Debug.Log(2);
+        objectName.text = "Door";
+        wordsSuggested.text = "Open";
+        objectHitName = "SquareDoor";
+
+    }
     // Method to lock and center cursor 
     void SetCursorState()
     {
@@ -288,6 +302,18 @@ using UnityStandardAssets.Characters.ThirdPerson;
                 AudioSource.PlayClipAtPoint(pushSpellSound, transform.position);
                 
             }
+        }
+        else if (objectHitName == "SquareDoor")
+        {
+            Debug.Log(1);
+            DoorOpenScript dooropenScript = hit.transform.GetComponent<DoorOpenScript>();
+           
+            if (action == "open")
+            {
+                AudioSource.PlayClipAtPoint(openDoor, transform.position);
+                dooropenScript.DoorOpen = true;
+            }
+            
         }
         else if (objectHitName == "lever1")
         {
@@ -384,6 +410,8 @@ using UnityStandardAssets.Characters.ThirdPerson;
             hit.transform.tag == "chestKey1" ||
             hit.transform.tag == "chest1" ||
             hit.transform.tag == "lootable" ||
+            hit.transform.tag == "SquareDoor" ||
+            hit.transform.tag == "CurvedDoor" ||
             hit.transform.tag == "pushspell")
         {
             
@@ -402,6 +430,8 @@ using UnityStandardAssets.Characters.ThirdPerson;
             hit.transform.tag == "lever1" ||
             hit.transform.tag == "spikeLever" ||
             hit.transform.tag == "chestKey1" ||
+            hit.transform.tag == "SquareDoor" ||
+            hit.transform.tag == "CurvedDoor"||
             hit.transform.tag == "chest1" ||
             hit.transform.tag == "lootable" ||
             hit.transform.tag == "pushspell")
