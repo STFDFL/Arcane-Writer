@@ -11,7 +11,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
  public class CursorController : MonoBehaviour
 {
 
-    [HideInInspector]
+   
     public FirstPersonController FPSC;
 
     public GameObject playeTorch;
@@ -190,7 +190,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     public void HittingTorch()
     {
         objectName.text = "A Torch";
-        wordsSuggested.text = "TAKE\n" +"BLOW\n" +"TOUCH";
+        wordsSuggested.text = "take\n" +"blow\n" +"touch";
         objectHitName = "torch";
     }
 
@@ -198,14 +198,14 @@ using UnityStandardAssets.Characters.ThirdPerson;
     {
        
         objectName.text = "The Celldoor";
-        wordsSuggested.text = "OPEN\n" +"CLOSE\n" +"";
+        wordsSuggested.text = "open\n" +"close\n" +"";
         objectHitName = "celldoor";
     }
     public void HittingPushSpell()
     {
       
         objectName.text = "WITCH SCREAM";
-        wordsSuggested.text = "READ\n";
+        wordsSuggested.text = "read\n";
         objectHitName = "pushspell";
 
     }
@@ -213,7 +213,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     {
        
         objectName.text = "Lever";
-        wordsSuggested.text = "Pull Left\n" + "Pull Right\n";
+        wordsSuggested.text = "pull left\n" + "pull right\n";
         objectHitName = "lever1";
 
     }
@@ -221,7 +221,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     {
 
         objectName.text = "Spike Trap";
-        wordsSuggested.text = "Pull Left\n" + "Pull Right\n";
+        wordsSuggested.text = "pull left\n" + "pull right\n";
         objectHitName = "spikeLever";
 
     }
@@ -229,7 +229,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     {
 
         objectName.text = "Key";
-        wordsSuggested.text = "Take";
+        wordsSuggested.text = "take";
         objectHitName = "chestKey1";
 
     }
@@ -237,7 +237,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     {
 
         objectName.text = "Chest";
-        wordsSuggested.text = "Open";
+        wordsSuggested.text = "open";
         objectHitName = "chest1";
 
     }
@@ -245,7 +245,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     {
 
         objectName.text = "Chest";
-        wordsSuggested.text = "Open";
+        wordsSuggested.text = "open";
         objectHitName = "chestGas";
 
     }
@@ -253,7 +253,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     {
 
         objectName.text = "Chest";
-        wordsSuggested.text = "Open";
+        wordsSuggested.text = "open";
         objectHitName = "chestT";
 
     }
@@ -261,7 +261,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     {
 
         objectName.text = "Crate";
-        wordsSuggested.text = "Loot";
+        wordsSuggested.text = "loot";
         objectHitName = "lootable";
 
     }
@@ -269,7 +269,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     {
         Debug.Log(2);
         objectName.text = "Door";
-        wordsSuggested.text = "Open";
+        wordsSuggested.text = "open";
         objectHitName = "SquareDoor";
 
     }
