@@ -41,7 +41,7 @@ public class InventoryManager : MonoBehaviour
         coinsText.text = coinsCollected.ToString();
         keysText.text = keysCollected.ToString();
 
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             if(healthPotInInventory >0)
             {

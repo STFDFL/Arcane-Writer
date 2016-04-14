@@ -60,6 +60,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     [Space(3)]
     public GameObject itsLocked;
     public GameObject itsAlreadyClosed;
+    public GameObject iShouldntDoThat;
 
     [Header("Sounds")]
 
@@ -318,9 +319,9 @@ using UnityStandardAssets.Characters.ThirdPerson;
             {
                 //cellDoorScript.pushIsApplied = true;
                 StartCoroutine(BustDoor());
-                AudioSource.PlayClipAtPoint(pushSpellSound, transform.position);
-                
+                AudioSource.PlayClipAtPoint(pushSpellSound, transform.position);  
             }
+            
         }
         else if (objectHitName == "SquareDoor")
         {
@@ -440,6 +441,10 @@ using UnityStandardAssets.Characters.ThirdPerson;
                 LootThis lootableObj = hit.transform.GetComponent<LootThis>();
                 lootableObj.Loot();
             }
+        }
+        else
+        {
+            iShouldntDoThat.SetActive(true);
         }
     }
 

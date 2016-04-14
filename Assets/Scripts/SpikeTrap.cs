@@ -29,7 +29,7 @@ public class SpikeTrap : MonoBehaviour {
             timeLeft -= Time.deltaTime;
             if (timeLeft < 0)
             {
-                Application.LoadLevel("Tutorial");
+                Application.LoadLevel(3);
             }
         }
     }
