@@ -3,14 +3,25 @@ using System.Collections;
 
 public class MenuManager : MonoBehaviour {
 
+	public GameObject player;
+	public Canvas menuItems;
+
+	private Animation playerAnim;
+	public float waitTime;
+
 	void Start()
 	{
+		playerAnim = player.GetComponent<Animation>();
+
 		Cursor.visible = true; 
+		menuItems.enabled = true;
 	}
 
 	public void LoadTutorial()
 	{
-		Application.LoadLevel(1);
+		menuItems.enabled = false;
+		playerAnim.enabled = true;
+		StartCoroutine (WaitForAnim ());
 	}
 
 
@@ -23,5 +34,13 @@ public class MenuManager : MonoBehaviour {
 	public void Exit()
 	{
 		Application.Quit ();
+	}
+
+
+
+	IEnumerator WaitForAnim ()
+	{
+		yield return new WaitForSeconds (waitTime);
+		Application.LoadLevel(1);
 	}
 }
