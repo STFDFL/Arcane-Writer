@@ -5,7 +5,7 @@ public class MenuManager : MonoBehaviour {
 
 	public GameObject player;
 	public Canvas menuItems;
-	public AudioSource wakeSound;
+	//public AudioSource wakeSound;
 
 	private Animation playerAnim;
 	public float waitTime;
@@ -20,7 +20,7 @@ public class MenuManager : MonoBehaviour {
 
 	public void LoadTutorial()
 	{
-		wakeSound.Play ();
+		//wakeSound.Play ();
 		menuItems.enabled = false;
 		playerAnim.enabled = true;
 		StartCoroutine (WaitForAnim ());
