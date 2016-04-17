@@ -10,10 +10,12 @@ public class TextCombatScript4 : MonoBehaviour {
 	public bool inCombat = false;
 	public float playerHealth;
 	public float AIHealth;
-	public float playerTurnTimer = 500;
+	public int playerTurnTimer = 500;
 	private int playerTurnTimerReset;
-	private float AITurnTimer = 50;
+	private int AITurnTimer = 30;
 	private int AITurnTimerReset;	
+	private int pause = 20;
+	private int pauseReset;
 	public Slider playerHealthBar;
 	public Slider AIHealthBar;
 	public Slider timerBar;
@@ -29,7 +31,6 @@ public class TextCombatScript4 : MonoBehaviour {
 	private float AIDefending;
 	public float playerDefenceValue;
 	public float AIDefenceValue;
-	private float damageDelt;
 	public int[] playerDamage;
 
 	//Guard Attacks
@@ -57,9 +58,8 @@ public class TextCombatScript4 : MonoBehaviour {
 
 	//input variables
 	private string combatAction;
+	public GameObject combatInputPanel;
 	public InputField inputField;
-	//public InputField EnemyDamageRecieved;
-	//public InputField PlayerDamageRecieved;
 	// sounds variables
 	public GameObject battleSound;
 	//spells variables
@@ -74,15 +74,15 @@ public class TextCombatScript4 : MonoBehaviour {
 	public GameObject cameraShaker;
 	private int AIAttacks;
 	private bool combat;
-	//	public Animator AIAnimator;
+	public GameObject enemyAnimator;
+	public GameObject cursor;
 
 	void Start () {
-		playerHealth = 100;
-		AIHealth = 100;
 		PlayerPrefs.GetFloat ("Player Health");
 		playerTurn = true;
-		playerTurnTimerReset = Mathf.RoundToInt (playerTurnTimer);
-		AITurnTimerReset = Mathf.RoundToInt (AITurnTimer);
+		playerTurnTimerReset = playerTurnTimer;
+		AITurnTimerReset = AITurnTimer;
+		pause = pauseReset;
 		playerHealthBar.maxValue = 100f;
 		playerHealthBar.minValue = 0;
 		AIHealthBar.maxValue = 100;
@@ -94,17 +94,18 @@ public class TextCombatScript4 : MonoBehaviour {
 		timerBar.value = Mathf.MoveTowards (playerTurnTimer, 100.0f, 0.15f);
 		enemy = enemy.GetComponent<Enemy>();
 		FPSC = GameObject.FindObjectOfType<FirstPersonController>();
-
-		//		AIAnimator = enemy.GetComponent<Animator> ();
 	}
 
 	void Update () {
-
+		cursor.SetActive (false);
 		enemy = enemy.GetComponent<Enemy> ();
 		combat = enemy.GetComponent<Enemy> ().combatOn;
 		combatAction = inputField.text;
 		PlayerPrefs.SetFloat ("Player Health", playerHealth);
 		if (combat == true) {
+			
+			enemy.GetComponent<NavMeshAgent> ().enabled = true;
+			FPSC.GetComponent<CombatCameraLock> ().enabled = true;
 			FPSC.GetComponent<FirstPersonController> ().enabled = false;
 			enemy.GetComponent<ThirdPersonCharacter> ().enabled = false;
 			enemy.GetComponent<AICharacterController> ().enabled = false;
@@ -112,6 +113,7 @@ public class TextCombatScript4 : MonoBehaviour {
 			battleSound.SetActive (true);
 			//Player Turn
 			if (playerTurn == true) {
+				combatInputPanel.SetActive (true);
 				inputField.ActivateInputField ();
 				if (Input.GetKeyDown (KeyCode.Return) && bansheeSpecialAttackActive == false) {
 					if (combatAction == "bite") {
@@ -168,7 +170,7 @@ public class TextCombatScript4 : MonoBehaviour {
 			}
 			//AI Turn
 			else if (playerTurn == false) {
-				//PlayerDamageRecieved.text = "";
+				combatInputPanel.SetActive (false);
 				playerTurnTimer = playerTurnTimer + 1;
 				timerBar.gameObject.SetActive (false);
 				AIHitChanceReset:
@@ -182,14 +184,22 @@ public class TextCombatScript4 : MonoBehaviour {
 				}
 				else {
 					AITurnOutcome ();
-					AITurnTimer = AITurnTimerReset;
-					//EnemyDamageRecieved.text = "";
-					timerBar.gameObject.SetActive (true);
-					playerTurn = true;
+					if (pause > 0) {
+						pause = pause - 1;
+					}
+					else {
+						AITurnTimer = AITurnTimerReset;
+						timerBar.gameObject.SetActive (true);
+						pause = pauseReset;
+						playerTurn = true;
+					}
 				}
 			}
 		}
 		else if (combat == false) {
+			cursor.SetActive (true);
+			enemy.GetComponent<NavMeshAgent> ().enabled = true;
+			FPSC.GetComponent<CombatCameraLock> ().enabled = false;
 			FPSC.GetComponent<FirstPersonController> ().enabled = true;
 			enemy.GetComponent<ThirdPersonCharacter> ().enabled = true;
 			enemy.GetComponent<AICharacterController> ().enabled = true;
@@ -201,7 +211,7 @@ public class TextCombatScript4 : MonoBehaviour {
 		if (playerHealth < 5 || AIHealth < 5) {
 			if (playerHealth <= 0) {
 				combat = false;
-				SceneManager.LoadScene("Owen's Combat Testing Scene");
+				Application.LoadLevel ("Game Over");
 			}
 			else if (AIHealth <= 0) {
 				combat = false;
@@ -235,7 +245,6 @@ public class TextCombatScript4 : MonoBehaviour {
 				houndSpecialAttackActive = false;
 			} else {
 				playerHealth = playerHealth - houndSpecialAttackDamage;
-				//EnemyDamageRecieved.text = ("-" + houndSpecialAttackDamage.ToString());
 			}
 		}
 
@@ -244,43 +253,37 @@ public class TextCombatScript4 : MonoBehaviour {
 				AIHealth = AIHealth - playerDamage[0] * AIDefending;
 				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
 				playerDefending = 1;
-				//				HitEnemySound ();
-				damageDelt = playerDamage[0] * AIDefending;
+				HitEnemySound ();
 			}
 			else if (playerAttackNumber == 2) {
 				AIHealth = AIHealth - playerDamage[1] * AIDefending;
 				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
 				playerDefending = 1;
-				//				HitEnemySound ();
-				damageDelt = playerDamage[1] * AIDefending;
+				HitEnemySound ();
 			}
 			else if (playerAttackNumber == 3) {
 				AIHealth = AIHealth - playerDamage[2] * AIDefending;
 				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
 				playerDefending = 1;
-				//				HitEnemySound ();
-				damageDelt = playerDamage[2] * AIDefending;
+				HitEnemySound ();
 			}
 			else if (playerAttackNumber == 4) {
 				AIHealth = AIHealth - playerDamage[3] * AIDefending;
 				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
 				playerDefending = 1;
-				//				HitEnemySound ();
-				damageDelt = playerDamage[3] * AIDefending;
+				HitEnemySound ();
 			}
 			else if (playerAttackNumber == 5) {
 				AIHealth = AIHealth - playerDamage[4] * AIDefending;
 				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
 				playerDefending = 1;
-				//				HitEnemySound ();
-				damageDelt = playerDamage[4] * AIDefending;
+				HitEnemySound ();
 			}
 			else if (playerAttackNumber == 6) {
 				AIHealth = AIHealth - playerDamage[5] * AIDefending;
 				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
 				playerDefending = 1;
-				//				HitEnemySound ();
-				damageDelt = playerDamage[5] * AIDefending;
+				HitEnemySound ();
 			}
 			else if (playerAttackNumber == 7) {
 				snakeVomit.SetActive (true);
@@ -288,8 +291,7 @@ public class TextCombatScript4 : MonoBehaviour {
 				AIHealth = AIHealth - playerDamage[6] * AIDefending;
 				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
 				playerDefending = 1;
-				//				HitEnemySound ();
-				damageDelt = playerDamage[6] * AIDefending;
+				HitEnemySound ();
 			}
 			else if (playerAttackNumber == 8) {
 				AIHealth = AIHealth - playerDamage[7] * AIDefending;
@@ -297,8 +299,7 @@ public class TextCombatScript4 : MonoBehaviour {
 				playerHealth = playerHealth + 20;
 				playerHealthBar.value = Mathf.MoveTowards (playerHealth, 100.0f, 0.15f);
 				playerDefending = 1;
-				//				HitEnemySound ();
-				damageDelt = playerDamage[7] * AIDefending;
+				HitEnemySound ();
 			}
 			else if (playerAttackNumber == 9) {
 				playerDefending = playerDefenceValue;
@@ -307,8 +308,6 @@ public class TextCombatScript4 : MonoBehaviour {
 				playerDefending = 1;
 			}
 		}
-		//EnemyDamageRecieved.text = ("-" + damageDelt.ToString());
-		damageDelt = 0;
 		HealthCheck ();
 	}
 	void AITurnOutcome(){
@@ -316,11 +315,10 @@ public class TextCombatScript4 : MonoBehaviour {
 		if (enemy.tag == "Guard") {
 			if (AIAttackNumber == 1 && AIHitChance > 25) {
 				int AIDamage = Random.Range (guardAttackMin, guardAttackMax);
+				HitPlayerSound ();
 				playerHealth = playerHealth - AIDamage * playerDefending;
 				AIDefending = 1;
-				//			HitPlayerSound ();
 				cameraShaker.GetComponent<CameraShake> ().enabled = true;
-				damageDelt = AIDamage * playerDefending;
 			}
 			else if (AIAttackNumber == 3 && AIHitChance > 50) {
 				if (AIHealth < 30) {
@@ -333,20 +331,18 @@ public class TextCombatScript4 : MonoBehaviour {
 		if (enemy.tag == "Banshee") {
 			if (AIAttackNumber == 1 && AIHitChance > 25) {
 				int AIDamage = Random.Range (bansheeAttackMin, bansheeAttackMax);
+				HitPlayerSound ();
 				playerHealth = playerHealth - AIDamage * playerDefending;
 				AIDefending = 1;
-				//			HitPlayerSound ();
 				cameraShaker.GetComponent<CameraShake> ().enabled = true;
-				damageDelt = AIDamage * playerDefending;
 			}
 			if (AIAttackNumber == 2 && AIHitChance > 50) {
 				if (AIHealth < 40) {
 					int AIDamage = bansheeMagicAttack;
+					HitPlayerSound ();
 					playerHealth = playerHealth - AIDamage * playerDefending;
 					AIDefending = 1;
-					//			HitPlayerSound ();
 					cameraShaker.GetComponent<CameraShake> ().enabled = true;
-					damageDelt = AIDamage * playerDefending;
 				}
 			}
 			if (AIAttackNumber == 3 && AIHitChance > bansheeSpecialAttackChance) {
@@ -357,7 +353,7 @@ public class TextCombatScript4 : MonoBehaviour {
 					bansheeSpecialAttackChance = 99;
 				}
 				AIDefending = 1;
-				//			HitPlayerSound ();
+				HitPlayerSound ();
 				cameraShaker.GetComponent<CameraShake> ().enabled = true;
 			}
 		}
@@ -365,16 +361,16 @@ public class TextCombatScript4 : MonoBehaviour {
 		if (enemy.tag == "Spider") {
 			if (AIAttackNumber == 1) {
 				int AIDamage = Random.Range (spiderAttackMin, spiderAttackMax);
+				HitPlayerSound ();
+				enemy.GetComponentInChildren<Animation>().Play("SpiderAttack");
 				playerHealth = playerHealth - AIDamage * playerDefending;
 				AIDefending = 1;
-				//			HitPlayerSound ();
-				enemy.GetComponent<Animation>().Play("SpiderAttack");
 				cameraShaker.GetComponent<CameraShake> ().enabled = true;
-				damageDelt = AIDamage * playerDefending;
+
 			} else if (AIAttackNumber == 2) {
 				if (AIHealth < 45) {
 					playerHealth = playerHealth - playerHealth * 0.05f;
-					enemy.GetComponent<Animation>().Play("SpiderAttack");
+					enemy.GetComponentInChildren<Animation>().Play("SpiderAttack");
 					cameraShaker.GetComponent<CameraShake> ().enabled = true;
 				}
 			}
@@ -383,20 +379,17 @@ public class TextCombatScript4 : MonoBehaviour {
 		if (enemy.tag == "Hellhound") {
 			if (AIAttackNumber == 1) {
 				int AIDamage = Random.Range (houndAttackMin, houndAttackMax);
+				HitPlayerSound ();
+				enemy.GetComponentInChildren<Animation>().Play("HellhoundAttack");
+				cameraShaker.GetComponent<CameraShake> ().enabled = true;
 				playerHealth = playerHealth - AIDamage * playerDefending;
 				AIDefending = 1;
-				//			HitPlayerSound ();
-				enemy.GetComponent<Animation>().Play("HellhoundAttack");
-				cameraShaker.GetComponent<CameraShake> ().enabled = true;
-				damageDelt = AIDamage * playerDefending;
 			} else if (AIAttackNumber == 2 && AIHitChance > houndSpecialAttackChance) {
 				houndSpecialAttackActive = true;
-				enemy.GetComponent<Animation>().Play("HellhoundAttack");
+				enemy.GetComponentInChildren<Animation>().Play("HellhoundAttack");
 				cameraShaker.GetComponent<CameraShake> ().enabled = true;
 			}
 		}
-		//PlayerDamageRecieved.text = ("-" + damageDelt.ToString());
-		damageDelt = 0;
 		HealthCheck ();
 	}
 	void HitPlayerSound(){
