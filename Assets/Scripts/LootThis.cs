@@ -12,6 +12,11 @@ public class LootThis : MonoBehaviour
     public GameObject potionEffect;
     public GameObject nothingEffect;
 
+	public AudioClip coinLootSound;
+	public AudioClip potionLootSound;
+	public AudioClip keyLootSound;
+	public AudioClip nothingLootSound;
+
     public bool keyHere;
     //public AudioClip trapSound;
     // Use this for initialization
@@ -34,22 +39,24 @@ public class LootThis : MonoBehaviour
             if(keyHere == false)
             {
                 lootChance = Random.Range(0, 100);
-                if ((lootChance >= 0) && (lootChance < 40)) // 40%
+                if ((lootChance >= 0) && (lootChance < 50)) // 50%
                 {
                     // nothing found
                     Instantiate(nothingEffect, gameObject.transform.position, gameObject.transform.rotation);
                     isLooted = true;
+					AudioSource.PlayClipAtPoint(nothingLootSound, transform.position);
                     Debug.Log("Nothing Found");
                 }
-                else if ((lootChance >= 40) && (lootChance < 70)) // 30%
+                else if ((lootChance >= 50) && (lootChance < 90)) // 40%
                 {
                     //potion is found
                     Instantiate(potionEffect, gameObject.transform.position, gameObject.transform.rotation);
                     inventoryManager.PotionFound();
                     isLooted = true;
+					AudioSource.PlayClipAtPoint(potionLootSound, transform.position);
                     Debug.Log("Potion Found");
                 }
-                else if ((lootChance >= 70) && (lootChance < 90)) // 20%
+                else if ((lootChance >= 70) && (lootChance < 90)) 
                 {
                     //trap is activated
                     Instantiate(nothingEffect, gameObject.transform.position, gameObject.transform.rotation);
@@ -62,12 +69,14 @@ public class LootThis : MonoBehaviour
                     // coin is found
                     inventoryManager.CoinFound();
                     isLooted = true;
+					AudioSource.PlayClipAtPoint(coinLootSound, transform.position);
                     Debug.Log("Coin Found");
                 }
             } else if(keyHere == true)
             {
                 inventoryManager.KeyFound();
                 isLooted = true;
+				AudioSource.PlayClipAtPoint(keyLootSound, transform.position);
                 Debug.Log("Key Found");
             }
 

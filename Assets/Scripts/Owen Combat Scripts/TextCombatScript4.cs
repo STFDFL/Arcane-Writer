@@ -73,11 +73,9 @@ public class TextCombatScript4 : MonoBehaviour {
 	//	public  GameObject cameraShaker;
 	public GameObject cameraShaker;
 	private int AIAttacks;
-	private bool combat;
+
 	public GameObject enemyAnimator;
 	public GameObject cursor;
-	private float distance;
-	public Transform player;
 	void Start () {
 		PlayerPrefs.GetFloat ("Player Health");
 		playerTurn = true;
@@ -98,24 +96,17 @@ public class TextCombatScript4 : MonoBehaviour {
 	}
 
 	void Update () {
-		distance = Vector3.Distance(player.position, transform.position);
 
 		
 //		enemy.GetComponent<NavMeshAgent> ().enabled = true;
 		enemy = enemy.GetComponent<Enemy> ();
-		combat = enemy.GetComponent<Enemy> ().combatOn;
+		//combat = enemy.GetComponent<Enemy> ().combatOn;
 		combatAction = inputField.text;
 
-//		if (distance < 1) {
-//			enemy.combatOn = true;
-//		}
-
-		if (Input.GetKeyDown ("0")) {
-			combat = true;
-		}
 
 		PlayerPrefs.SetFloat ("Player Health", playerHealth);
-		if (combat == true) {
+		if (inCombat == true) {
+			Debug.Log ("yay");
 			cursor.SetActive (false);
 			enemy.GetComponent<NavMeshAgent> ().enabled = true;
 			FPSC.GetComponent<CombatCameraLock> ().enabled = true;
@@ -210,7 +201,7 @@ public class TextCombatScript4 : MonoBehaviour {
 				}
 			}
 		}
-		else if (combat == false) {
+		else if (inCombat == false) {
 			cursor.SetActive (true);
 			enemy.GetComponent<NavMeshAgent> ().enabled = true;
 			FPSC.GetComponent<CombatCameraLock> ().enabled = false;
@@ -224,11 +215,11 @@ public class TextCombatScript4 : MonoBehaviour {
 	void HealthCheck(){
 		if (playerHealth < 5 || AIHealth < 5) {
 			if (playerHealth <= 0) {
-				combat = false;
+				inCombat = false;
 				Application.LoadLevel ("Game Over");
 			}
 			else if (AIHealth <= 0) {
-				combat = false;
+				inCombat = false;
 				enemy.isThisAlive = false;
 				combatUI.SetActive(false);
 				battleSound.SetActive(false);

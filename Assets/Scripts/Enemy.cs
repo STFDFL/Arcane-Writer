@@ -32,13 +32,15 @@ public class Enemy : MonoBehaviour
         if (distance < triggerDistance && isThisAlive == true)
         {
            Debug.Log("combat has started");
-            textCombatScript.inCombat = true;
-            combatOn = true;
+            //textCombatScript.inCombat = true;
+			textCombatScript.inCombat = true;
+            //combatOn = true;
         }
         else if(isThisAlive == false)
         {
             gameObject.SetActive(false);
             combatOn = false;
+			textCombatScript.inCombat = false;
         }
 		if (textCombatScript.AIHealth <= 0) {
 			gameObject.SetActive (false);
