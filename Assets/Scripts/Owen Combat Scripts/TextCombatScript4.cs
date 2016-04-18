@@ -76,7 +76,8 @@ public class TextCombatScript4 : MonoBehaviour {
 	private bool combat;
 	public GameObject enemyAnimator;
 	public GameObject cursor;
-
+	private float distance;
+	public Transform player;
 	void Start () {
 		PlayerPrefs.GetFloat ("Player Health");
 		playerTurn = true;
@@ -97,16 +98,29 @@ public class TextCombatScript4 : MonoBehaviour {
 	}
 
 	void Update () {
-		cursor.SetActive (false);
+		distance = Vector3.Distance(player.position, transform.position);
+
+		
+//		enemy.GetComponent<NavMeshAgent> ().enabled = true;
 		enemy = enemy.GetComponent<Enemy> ();
 		combat = enemy.GetComponent<Enemy> ().combatOn;
 		combatAction = inputField.text;
+
+//		if (distance < 1) {
+//			enemy.combatOn = true;
+//		}
+
+		if (Input.GetKeyDown ("0")) {
+			combat = true;
+		}
+
 		PlayerPrefs.SetFloat ("Player Health", playerHealth);
 		if (combat == true) {
-			
+			cursor.SetActive (false);
 			enemy.GetComponent<NavMeshAgent> ().enabled = true;
 			FPSC.GetComponent<CombatCameraLock> ().enabled = true;
 			FPSC.GetComponent<FirstPersonController> ().enabled = false;
+			enemy.combatOn = true;
 			enemy.GetComponent<ThirdPersonCharacter> ().enabled = false;
 			enemy.GetComponent<AICharacterController> ().enabled = false;
 			combatUI.SetActive (true);
@@ -200,7 +214,7 @@ public class TextCombatScript4 : MonoBehaviour {
 			cursor.SetActive (true);
 			enemy.GetComponent<NavMeshAgent> ().enabled = true;
 			FPSC.GetComponent<CombatCameraLock> ().enabled = false;
-			FPSC.GetComponent<FirstPersonController> ().enabled = true;
+
 			enemy.GetComponent<ThirdPersonCharacter> ().enabled = true;
 			enemy.GetComponent<AICharacterController> ().enabled = true;
 		}
