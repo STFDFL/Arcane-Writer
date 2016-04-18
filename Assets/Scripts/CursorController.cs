@@ -33,7 +33,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
     public GameObject theCursorWhenHitting;
 
     //the action wrote by the player
-    [HideInInspector]
+    //[HideInInspector]
     public string action;
     //the object hit by the raycast to check against the action chose by the player
     [HideInInspector]
@@ -425,7 +425,9 @@ using UnityStandardAssets.Characters.ThirdPerson;
             
             if (action == "take")
             {
+				if (hit.transform.gameObject.tag == "torch")
                 hit.transform.gameObject.SetActive(false);
+				
                 playeTorch.SetActive(true);
                 Debug.Log("torch taken");
                 AudioSource.PlayClipAtPoint(takeTorchSound, transform.position);
