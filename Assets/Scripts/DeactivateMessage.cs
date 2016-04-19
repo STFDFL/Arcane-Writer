@@ -4,10 +4,11 @@ using System.Collections;
 public class DeactivateMessage : MonoBehaviour {
 
    public float timeLeft = 5f;
+	public float timeLeft2;
     // Use this for initialization
     void Start ()
     {
-	
+		timeLeft2 = timeLeft;
 	}
    
 
@@ -16,10 +17,11 @@ public class DeactivateMessage : MonoBehaviour {
     {
         if (gameObject.activeSelf)
         {
-            timeLeft -= Time.deltaTime;
-            if (timeLeft < 0)
+            timeLeft2 -= Time.deltaTime;
+            if (timeLeft2 < 0)
             {
                 gameObject.SetActive(false);
+				timeLeft2 = timeLeft;
             }
         }
     }

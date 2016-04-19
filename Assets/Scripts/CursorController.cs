@@ -302,8 +302,9 @@ using UnityStandardAssets.Characters.ThirdPerson;
             GameObject pushS;
             pushS = GameObject.FindGameObjectWithTag("pushspell");
             pushS.SetActive(false);
-        }
-        else if (objectHitName == "celldoor")
+		}
+
+        if (objectHitName == "celldoor")
         {
             GameObject tutorialDoor = GameObject.Find("Tutorial Door");
             CellDoor cellDoorScript = tutorialDoor.GetComponent<CellDoor>();
@@ -321,21 +322,32 @@ using UnityStandardAssets.Characters.ThirdPerson;
                 StartCoroutine(BustDoor());
                 AudioSource.PlayClipAtPoint(pushSpellSound, transform.position);  
             }
+			else
+			{
+				iShouldntDoThat.SetActive(true);
+			}
             
         }
-        else if (objectHitName == "SquareDoor")
+        if (objectHitName == "SquareDoor")
         {
             Debug.Log(1);
             DoorOpenScript dooropenScript = hit.transform.GetComponent<DoorOpenScript>();
-           
-            if (action == "open")
+			if (dooropenScript.doorCantBeOpened )
+			{
+				itsLocked.SetActive(true);
+			}
+            else if (action == "open" )
             {
                 AudioSource.PlayClipAtPoint(openDoor, transform.position);
                 dooropenScript.DoorOpen = true;
-            }
+			}else
+			{
+				iShouldntDoThat.SetActive(true);
+			}
+
             
         }
-        else if (objectHitName == "lever1")
+        if (objectHitName == "lever1")
         {
             GameObject lever1 = GameObject.Find("lever1");
             Levercontroller leverController = lever1.GetComponent<Levercontroller>();
@@ -347,9 +359,10 @@ using UnityStandardAssets.Characters.ThirdPerson;
             {
                 leverController.PullLeverRight();
             }
+
            
         }
-        else if (objectHitName == "spikeLever")
+        if (objectHitName == "spikeLever")
         {
             GameObject spikeLever = GameObject.Find("spikeLever");
             SpikeLever spikeLeverController = spikeLever.GetComponent<SpikeLever>();
@@ -361,6 +374,10 @@ using UnityStandardAssets.Characters.ThirdPerson;
             {
                 spikeLeverController.PullLeverRight();
             }
+			else
+			{
+				iShouldntDoThat.SetActive(true);
+			}
 
         }
         if (objectHitName == "chestKey1")
@@ -375,6 +392,10 @@ using UnityStandardAssets.Characters.ThirdPerson;
                 cKey.SetActive(false);
                 AudioSource.PlayClipAtPoint(takeKeySound, transform.position);
             }  
+			else
+			{
+				iShouldntDoThat.SetActive(true);
+			}
         }
         if (objectHitName == "chest1")
         {
@@ -393,6 +414,10 @@ using UnityStandardAssets.Characters.ThirdPerson;
                     AlarmTrap alarmTrapScript = alarmTrap.GetComponent<AlarmTrap>();
                     alarmTrapScript.actvateTrap = true;
                 }
+				else
+				{
+					iShouldntDoThat.SetActive(true);
+				}
             }
         }
         if (objectHitName == "chestGas")
@@ -407,7 +432,10 @@ using UnityStandardAssets.Characters.ThirdPerson;
                     AudioSource.PlayClipAtPoint(openChestSound, transform.position);
                 gasTrap.trapEnabled = true;
                 }
-            
+			else
+			{
+				iShouldntDoThat.SetActive(true);
+			}
         }
         if (objectHitName == "chestT")
         {
@@ -416,9 +444,11 @@ using UnityStandardAssets.Characters.ThirdPerson;
                 {
                     chestT.GetComponent<Animation>().Play("ChestAnim");
                     AudioSource.PlayClipAtPoint(openChestSound, transform.position);
-             
                 }
-            
+			else
+			{
+				iShouldntDoThat.SetActive(true);
+			}
         }
         if (objectHitName == "torch")
         {
@@ -432,6 +462,10 @@ using UnityStandardAssets.Characters.ThirdPerson;
                 Debug.Log("torch taken");
                 AudioSource.PlayClipAtPoint(takeTorchSound, transform.position);
             }
+			else
+			{
+				iShouldntDoThat.SetActive(true);
+			}
         }
         if (objectHitName == "lootable")
         {
@@ -443,11 +477,12 @@ using UnityStandardAssets.Characters.ThirdPerson;
                 LootThis lootableObj = hit.transform.GetComponent<LootThis>();
                 lootableObj.Loot();
             }
-        }
-        else
-        {
-            iShouldntDoThat.SetActive(true);
-        }
+			else
+			{
+				iShouldntDoThat.SetActive(true);
+			}
+		}
+        
     }
 
     public void CheckAnyHit()
