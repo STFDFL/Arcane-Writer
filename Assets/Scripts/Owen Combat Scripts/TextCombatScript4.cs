@@ -77,6 +77,7 @@ public class TextCombatScript4 : MonoBehaviour {
 	public GameObject enemyAnimator;
 	public GameObject cursor;
 	void Start () {
+		
 		PlayerPrefs.GetFloat ("Player Health");
 		playerTurn = true;
 		playerTurnTimerReset = playerTurnTimer;
@@ -91,7 +92,7 @@ public class TextCombatScript4 : MonoBehaviour {
 		playerHealthBar.value = Mathf.MoveTowards (playerHealth, 100.0f, 0.15f);
 		AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
 		timerBar.value = Mathf.MoveTowards (playerTurnTimer, 100.0f, 0.15f);
-		enemy = enemy.GetComponent<Enemy>();
+		//enemy = enemy.GetComponent<Enemy>();
 		FPSC = GameObject.FindObjectOfType<FirstPersonController>();
 	}
 
@@ -99,7 +100,7 @@ public class TextCombatScript4 : MonoBehaviour {
 
 		
 //		enemy.GetComponent<NavMeshAgent> ().enabled = true;
-		enemy = enemy.GetComponent<Enemy> ();
+		//enemy = enemy.GetComponent<Enemy> ();
 		//combat = enemy.GetComponent<Enemy> ().combatOn;
 		combatAction = inputField.text;
 

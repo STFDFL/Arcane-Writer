@@ -13,6 +13,7 @@ public class DoorOpenScript : MonoBehaviour {
 		if (DoorOpen == true && !DoorOpened &&!doorCantBeOpened)
 		{
             gameObject.GetComponent<Animation>().Play("DoorOpenAnimation");
+			gameObject.GetComponent<MeshCollider> ().isTrigger = true;
             DoorOpened = true;
         }
     }

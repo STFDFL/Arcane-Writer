@@ -4,10 +4,10 @@ using System.Collections;
 public class CombatCameraLock : MonoBehaviour {
 
 	public GameObject sceneManager;
-	private GameObject target;
+	private Enemy target;
 
 	void Update () {
-		target = sceneManager.GetComponent<TextCombatScript4> ().enemyAnimator;
+		target = sceneManager.GetComponent<TextCombatScript4> ().enemy;
 		gameObject.transform.LookAt (target.transform.position);
 	}
 }

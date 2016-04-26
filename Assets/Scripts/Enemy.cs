@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
     public Transform target;
     public bool combatOn;
    
-
+	public Enemy me;
 
 
     // Use this for initialization
@@ -22,17 +22,20 @@ public class Enemy : MonoBehaviour
     {
    
         textCombatScript = sceneManager.GetComponent<TextCombatScript4>();
+		//textCombatScript.enemy = me;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        
+		
+		
         distance = Vector3.Distance(target.position, transform.position);
         if (distance < triggerDistance && isThisAlive == true)
         {
            Debug.Log("combat has started");
             //textCombatScript.inCombat = true;
+			textCombatScript.enemy = me;
 			textCombatScript.inCombat = true;
             //combatOn = true;
         }
@@ -42,7 +45,7 @@ public class Enemy : MonoBehaviour
             combatOn = false;
 			textCombatScript.inCombat = false;
         }
-		if (textCombatScript.AIHealth <= 0) {
+		if (textCombatScript.AIHealth <= 0 && combatOn) {
 			gameObject.SetActive (false);
 			textCombatScript.playerAttackNumber = 0;
 		}
