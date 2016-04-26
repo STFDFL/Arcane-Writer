@@ -158,6 +158,11 @@ using UnityStandardAssets.Characters.ThirdPerson;
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingLootable();
                     }
+				else if (hit.transform.tag == "Void")
+				{
+					AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
+					HittingVoid();
+				}
                 else 
                     {
                         inputField.text = "";
@@ -274,6 +279,14 @@ using UnityStandardAssets.Characters.ThirdPerson;
         objectHitName = "SquareDoor";
 
     }
+	public void HittingVoid()
+	{
+		Debug.Log(2);
+		objectName.text = "Door";
+		wordsSuggested.text = "open";
+		objectHitName = "Void";
+
+	}
     // Method to lock and center cursor 
     void SetCursorState()
     {
@@ -473,10 +486,22 @@ using UnityStandardAssets.Characters.ThirdPerson;
             if (action == "loot")
             {
                 Debug.Log("looting");
-                AudioSource.PlayClipAtPoint(lootingSound, transform.position);
+                //AudioSource.PlayClipAtPoint(lootingSound, transform.position);
                 LootThis lootableObj = hit.transform.GetComponent<LootThis>();
                 lootableObj.Loot();
             }
+			else
+			{
+				iShouldntDoThat.SetActive(true);
+			}
+		}
+		if (objectHitName == "Void")
+		{
+
+			if (action == "open")
+			{
+				iShouldntDoThat.SetActive(true);
+			}
 			else
 			{
 				iShouldntDoThat.SetActive(true);
@@ -499,6 +524,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
             hit.transform.tag == "lootable" ||
             hit.transform.tag == "SquareDoor" ||
             hit.transform.tag == "CurvedDoor" ||
+			hit.transform.tag == "Void" ||
             hit.transform.tag == "pushspell")
         {
             
@@ -523,6 +549,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
             hit.transform.tag == "chestGas" ||
             hit.transform.tag == "chestT" ||
             hit.transform.tag == "lootable" ||
+			hit.transform.tag == "Void" ||
             hit.transform.tag == "pushspell")
         {
             theCursorWhenHitting.SetActive(true);

@@ -1,13 +1,17 @@
 fileFormatVersion: 2
 guid: 0d9fc91d50c75e64b84cf5b5a675d989
-timeCreated: 1460278283
-licenseType: Free
+timeCreated: 1461645856
+licenseType: Pro
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - coinEffect: {fileID: 100000, guid: 7273d1f37db7b2f4c89295644986c5f0, type: 2}
   - potionEffect: {fileID: 100000, guid: bf4716d237eea6b4c87495800941e336, type: 2}
   - nothingEffect: {fileID: 100000, guid: bc9d63de069b07a4680d0b539cc2e18a, type: 2}
+  - coinLootSound: {instanceID: 0}
+  - potionLootSound: {instanceID: 0}
+  - keyLootSound: {fileID: 8300000, guid: 79fd0f68991a4cf4291c802b1d8d60e6, type: 3}
+  - nothingLootSound: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
