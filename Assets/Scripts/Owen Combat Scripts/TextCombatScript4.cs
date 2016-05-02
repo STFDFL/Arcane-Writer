@@ -27,9 +27,12 @@ public class TextCombatScript4 : MonoBehaviour {
 	private bool timerbarActive;
 	public GameObject combatUI;
 	public Enemy enemy;
+
 	private float playerDefending;
-	private float AIDefending;
+	[SerializeField]
+	private float AIDefending = 1;
 	public float playerDefenceValue;
+
 	public float AIDefenceValue;
 	public int[] playerDamage;
 
@@ -57,6 +60,7 @@ public class TextCombatScript4 : MonoBehaviour {
 	public float spiderSpecialDamagePercentage;
 
 	//input variables
+	[SerializeField]
 	private string combatAction;
 	public GameObject combatInputPanel;
 	public InputField inputField;
@@ -65,6 +69,9 @@ public class TextCombatScript4 : MonoBehaviour {
 	//spells variables
 	public GameObject snakeVomit;
 	public AudioClip snakeVomitSound;
+	public GameObject bloodLeech;
+	public GameObject fireSpell;
+	public AudioClip fireSpellSound;
 	//sound varibles
 	public AudioClip[] playerHitSound;
 	public AudioClip[] enemyHitSound;
@@ -76,8 +83,12 @@ public class TextCombatScript4 : MonoBehaviour {
 
 	public GameObject enemyAnimator;
 	public GameObject cursor;
+
+	public GameObject firstPersonCharacter;
+	public CursorController cursorController;
 	void Start () {
-		
+		firstPersonCharacter = GameObject.Find ("FirstPersonCharacter");
+		cursorController = firstPersonCharacter.GetComponent<CursorController> ();
 		PlayerPrefs.GetFloat ("Player Health");
 		playerTurn = true;
 		playerTurnTimerReset = playerTurnTimer;
@@ -140,12 +151,23 @@ public class TextCombatScript4 : MonoBehaviour {
 						playerAttackNumber = 8;
 					} else if (combatAction == "guard") {
 						playerAttackNumber = 9;
-					} else {
+					} else if (combatAction == "demonic fire") 
+					{
+						if(cursorController.iLearnedDemonicFireball)
+						playerAttackNumber = 10;
+					} 
+					else if (combatAction == "blood leech") 
+					{
+						if(cursorController.iLearnedBloodLeech)
+						playerAttackNumber = 11;
+					} 
+					else {
 						playerAttackNumber = 0;
 					}
 					playerTurnTimer = playerTurnTimerReset;
 					PlayerTurnOutcome ();
 					inputField.text = "";
+					//combatAction = null;
 					timerBar.gameObject.SetActive (false);
 					playerTurn = false;
 				} else if (bansheeSpecialAttackActive == true) {
@@ -153,6 +175,7 @@ public class TextCombatScript4 : MonoBehaviour {
 					playerTurnTimer = playerTurnTimerReset;
 					PlayerTurnOutcome ();
 					inputField.text = "";
+					//combatAction = null;
 					timerBar.gameObject.SetActive (false);
 					playerTurn = false;
 					bansheeSpecialAttackActive = false;
@@ -176,6 +199,9 @@ public class TextCombatScript4 : MonoBehaviour {
 			}
 			//AI Turn
 			else if (playerTurn == false) {
+				inputField.text = "";
+				combatAction = null;
+				playerAttackNumber = 0;
 				combatInputPanel.SetActive (false);
 				playerTurnTimer = playerTurnTimer + 1;
 				timerBar.gameObject.SetActive (false);
@@ -309,6 +335,27 @@ public class TextCombatScript4 : MonoBehaviour {
 			}
 			else if (playerAttackNumber == 9) {
 				playerDefending = playerDefenceValue;
+			}
+			else if (playerAttackNumber == 10) {
+				//fire spell
+				fireSpell.SetActive (true);
+				AudioSource.PlayClipAtPoint (snakeVomitSound, transform.position);
+				AIHealth = AIHealth - playerDamage[8] * AIDefending;
+				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
+				playerHealthBar.value = Mathf.MoveTowards (playerHealth, 100.0f, 0.15f);
+				playerDefending = 1;
+				HitEnemySound ();
+			}
+			else if (playerAttackNumber == 11) {
+				// leech spell
+				bloodLeech.SetActive (true);
+				//AudioSource.PlayClipAtPoint (snakeVomitSound, transform.position);
+				AIHealth = AIHealth - playerDamage[9] * AIDefending;
+				AIHealthBar.value = Mathf.MoveTowards (AIHealth, 100.0f, 0.15f);
+				playerHealth = playerHealth + playerDamage[9];
+				playerHealthBar.value = Mathf.MoveTowards (playerHealth, 100.0f, 0.15f);
+				playerDefending = 1;
+				HitEnemySound ();
 			} 
 			else {
 				playerDefending = 1;

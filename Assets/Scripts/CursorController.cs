@@ -49,11 +49,11 @@ using UnityStandardAssets.Characters.ThirdPerson;
     [Header("Spells")]
     [Space(3)]
     public GameObject pushSymbol;
-    private bool iLearnedPush = false;
+	public bool iLearnedPush = false;
 	public GameObject demonicFireballSymbol;
-	private bool iLearnedDemonicFireball = false;
+	public bool iLearnedDemonicFireball = false;
 	public GameObject bloodLeechSymbol;
-	private bool iLearnedBloodLeech = false;
+	public bool iLearnedBloodLeech = false;
 
     [Header("Collected Objects")]
     [Space(3)]
