@@ -50,6 +50,10 @@ using UnityStandardAssets.Characters.ThirdPerson;
     [Space(3)]
     public GameObject pushSymbol;
     private bool iLearnedPush = false;
+	public GameObject demonicFireballSymbol;
+	private bool iLearnedDemonicFireball = false;
+	public GameObject bloodLeechSymbol;
+	private bool iLearnedBloodLeech = false;
 
     [Header("Collected Objects")]
     [Space(3)]
@@ -117,6 +121,16 @@ using UnityStandardAssets.Characters.ThirdPerson;
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
                         HittingPushSpell();
                     }
+				else if (hit.transform.tag == "firespell")
+				{
+					AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
+					HittingFireSpell();
+				}
+				else if (hit.transform.tag == "leechspell")
+				{
+					AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
+					HittingLeechSpell();
+				}
                     else if (hit.transform.tag == "lever1")
                     {
                         AudioSource.PlayClipAtPoint(inputPopUp, transform.position);
@@ -215,6 +229,22 @@ using UnityStandardAssets.Characters.ThirdPerson;
         objectHitName = "pushspell";
 
     }
+	public void HittingFireSpell()
+	{
+
+		objectName.text = "DEMONIC FIRE";
+		wordsSuggested.text = "read\n";
+		objectHitName = "firespell";
+
+	}
+	public void HittingLeechSpell()
+	{
+
+		objectName.text = "BLOOD LEECH";
+		wordsSuggested.text = "read\n";
+		objectHitName = "leechspell";
+
+	}
     public void HittingLever1()
     {
        
@@ -307,16 +337,31 @@ using UnityStandardAssets.Characters.ThirdPerson;
     // this method checks the words inserted by the player in the input 
     public void CheckForWords()
     {
-        if(objectHitName == "pushspell" && action == "read")
+        if(objectHitName == "firespell" && action == "read")
         {
-            pushSymbol.SetActive(true);
-            iLearnedPush = true;
-            //hit.transform.gameObject.SetActive(false);
-            GameObject pushS;
-            pushS = GameObject.FindGameObjectWithTag("pushspell");
-            pushS.SetActive(false);
+            demonicFireballSymbol.SetActive(true);
+            iLearnedDemonicFireball = true;
+            GameObject fireS;
+            fireS = GameObject.FindGameObjectWithTag("firespell");
+            fireS.SetActive(false);
 		}
-
+		if(objectHitName == "leechspell" && action == "read")
+		{
+			bloodLeechSymbol.SetActive(true);
+			iLearnedBloodLeech = true;
+			GameObject leechS;
+			leechS = GameObject.FindGameObjectWithTag("leechspell");
+			leechS.SetActive(false);
+		}
+		if(objectHitName == "pushspell" && action == "read")
+		{
+			pushSymbol.SetActive(true);
+			iLearnedPush = true;
+			//hit.transform.gameObject.SetActive(false);
+			GameObject pushS;
+			pushS = GameObject.FindGameObjectWithTag("pushspell");
+			pushS.SetActive(false);
+		}
         if (objectHitName == "celldoor")
         {
             GameObject tutorialDoor = GameObject.Find("Tutorial Door");
@@ -331,7 +376,6 @@ using UnityStandardAssets.Characters.ThirdPerson;
             }
             else if (action == "witch scream" && iLearnedPush == true)
             {
-                //cellDoorScript.pushIsApplied = true;
                 StartCoroutine(BustDoor());
                 AudioSource.PlayClipAtPoint(pushSpellSound, transform.position);  
             }
@@ -352,7 +396,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
             else if (action == "open" )
             {
                 AudioSource.PlayClipAtPoint(openDoor, transform.position);
-                dooropenScript.DoorOpen = true;
+				dooropenScript.TryToOpen ();
 			}else
 			{
 				iShouldntDoThat.SetActive(true);
@@ -404,6 +448,9 @@ using UnityStandardAssets.Characters.ThirdPerson;
                 cKey = GameObject.FindGameObjectWithTag("chestKey1");
                 cKey.SetActive(false);
                 AudioSource.PlayClipAtPoint(takeKeySound, transform.position);
+				GameObject sceneManager = GameObject.Find("SceneManager");
+				InventoryManager inventoryManager = sceneManager.GetComponent<InventoryManager>();
+				inventoryManager.KeyFound ();
             }  
 			else
 			{
@@ -525,6 +572,8 @@ using UnityStandardAssets.Characters.ThirdPerson;
             hit.transform.tag == "SquareDoor" ||
             hit.transform.tag == "CurvedDoor" ||
 			hit.transform.tag == "Void" ||
+			hit.transform.tag == "leechspell" ||
+			hit.transform.tag == "firespell" ||
             hit.transform.tag == "pushspell")
         {
             
@@ -550,6 +599,8 @@ using UnityStandardAssets.Characters.ThirdPerson;
             hit.transform.tag == "chestT" ||
             hit.transform.tag == "lootable" ||
 			hit.transform.tag == "Void" ||
+			hit.transform.tag == "leechspell" ||
+			hit.transform.tag == "firespell" ||
             hit.transform.tag == "pushspell")
         {
             theCursorWhenHitting.SetActive(true);

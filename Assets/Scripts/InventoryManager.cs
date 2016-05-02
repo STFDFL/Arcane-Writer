@@ -4,13 +4,13 @@ using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
-    [SerializeField]
-    private int keysCollected;
-    [SerializeField]
+    
+   public int keysCollected;
+
     private int coinsCollected;
-    [SerializeField]
+
     private int healthPotCollected;
-    [SerializeField]
+
     private int healthPotUsed;
     public int healthPotInInventory;
     public Text potionsText;
