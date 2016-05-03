@@ -8,7 +8,7 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class GasTrap : MonoBehaviour
 {
-    public FirstPersonController FPSC;
+    //public FirstPersonController FPSC;
  
     public bool trapEnabled = false;
     private bool trapHasKilled = false;
@@ -17,9 +17,13 @@ public class GasTrap : MonoBehaviour
     private float timeLeft = 5f;
     public GameObject sceneManager;
     public float gasDamage;
+	TextCombatScript4 textCombatScript;
+	public AudioClip coughSound;
+	public bool isCoughing = false;
+
     void Start()
     {
-
+		textCombatScript = sceneManager.GetComponent<TextCombatScript4>();
     }
 
     // Update is called once per frame
@@ -44,6 +48,7 @@ public class GasTrap : MonoBehaviour
                 Debug.Log("trap activated");
                 ActivateGasTrap();
                 StartCoroutine(GasDamageOverTime());
+				StartCoroutine(Cough());
             }
         }
     }
@@ -63,10 +68,23 @@ public class GasTrap : MonoBehaviour
     }
     IEnumerator GasDamageOverTime()
     {
-        TextCombatScript textCombatScript = sceneManager.GetComponent<TextCombatScript>();
+        //TextCombatScript4 textCombatScript = sceneManager.GetComponent<TextCombatScript4>();
         yield return new WaitForSeconds(3);
         textCombatScript.playerHealth = textCombatScript.playerHealth - (gasDamage * Time.deltaTime); 
 
         //		Debug.Log ("This Happens");
     }
+	IEnumerator Cough()
+	{
+		if (!isCoughing) {
+			isCoughing = true;
+			AudioSource.PlayClipAtPoint (coughSound, transform.position);
+			yield return new WaitForSeconds(8);
+			isCoughing = false;
+		}
+
+
+
+
+	}
 }

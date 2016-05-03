@@ -19,13 +19,22 @@ public class InventoryManager : MonoBehaviour
     public float potionPower;
     GameObject sceneManager;
     TextCombatScript combatManager;
+	private int zero = 0;
+
+	public bool thisIsTutorial = false;
     // Use this for initialization
     void Start ()
     {
-        coinsCollected = 0;
-        healthPotCollected = 0;
-        //healthPotInInventory = 0;
-        healthPotUsed = 0;
+		if (thisIsTutorial) {
+		
+			PlayerPrefs.SetInt("keysColl", zero);
+			PlayerPrefs.SetInt("coinsColl",zero);
+			PlayerPrefs.SetInt("potionsColl",zero);
+			PlayerPrefs.SetInt("potionsInv", zero);
+		}
+			
+
+		healthPotInInventory = PlayerPrefs.GetInt ("potionsInv");
         sceneManager = GameObject.Find("SceneManager");
         combatManager = sceneManager.GetComponent<TextCombatScript>();
     }
@@ -40,6 +49,7 @@ public class InventoryManager : MonoBehaviour
         potionsText.text = healthPotInInventory.ToString();
         coinsText.text = coinsCollected.ToString();
         keysText.text = keysCollected.ToString();
+		healthPotInInventory = PlayerPrefs.GetInt ("potionsInv");
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {

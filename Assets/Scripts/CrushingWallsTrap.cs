@@ -12,16 +12,17 @@ public class CrushingWallsTrap : MonoBehaviour {
     public Transform leftWallsT;
     public Transform rightWallsT;
 	public FirstPersonController FPSC;
-	public AudioClip movingWallsSound;
+	public AudioSource movingWallsSound;
 	public AudioClip stopWallsSound;
 	public AudioClip pPSound;
 	public float timeLeft = 5f;
 	private float distL;
 	private float distR;
+	private bool wS = false;
     // Use this for initialization
     void Start ()
     {
-	
+		movingWallsSound = gameObject.GetComponent<AudioSource> ();
 	}
 	
 	// Update is called once per frame
@@ -35,9 +36,13 @@ public class CrushingWallsTrap : MonoBehaviour {
             rightWalls.transform.Translate(Vector3.back * Time.deltaTime * speed);
             if (leftWallsT && rightWallsT)
             {
-				AudioSource.PlayClipAtPoint(movingWallsSound, transform.position);
-                Debug.Log("distL:"+distL);
-                Debug.Log("distR:"+distR);
+				if (wallsAreMoving == true && wS == true) {
+					StartCoroutine (WallSoundC ());
+				}
+
+
+                //Debug.Log("distL:"+distL);
+                //Debug.Log("distR:"+distR);
                 if (distL >= 5.1f && distR >= 4.6f)
                 {
 					//FPSC.GetComponent<FirstPersonController>().enabled = false;
@@ -52,10 +57,11 @@ public class CrushingWallsTrap : MonoBehaviour {
         if (other.gameObject.tag == "Player")
         {
 			AudioSource.PlayClipAtPoint(pPSound, transform.position);
-            Debug.Log("player enter!");
+           // Debug.Log("player enter!");
             pressurePlate.transform.Translate(Vector3.down * Time.deltaTime * speed);
             playerActivateTrap = true;
             wallsAreMoving = true;
+			wS = true;
         }
     }
 	void OnTriggerStay(Collider other)
@@ -68,9 +74,15 @@ public class CrushingWallsTrap : MonoBehaviour {
 				timeLeft -= Time.deltaTime;
 				if (timeLeft < 0)
 				{
-					Application.LoadLevel(3);
+					Application.LoadLevel("Game Over 1" );
 				}
 			}
 		}
+	}
+	IEnumerator WallSoundC()
+	{
+		wS = false;
+		movingWallsSound.Play ();
+		yield return new WaitForSeconds (5.5f);
 	}
 }

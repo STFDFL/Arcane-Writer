@@ -58,7 +58,7 @@ public class TextCombatScript4 : MonoBehaviour {
 	public int spiderAttackMin;
 	public int spiderSpecialAttackChance;
 	public float spiderSpecialDamagePercentage;
-
+	public string levelToLoad;
 	//input variables
 	[SerializeField]
 	private string combatAction;
@@ -108,8 +108,8 @@ public class TextCombatScript4 : MonoBehaviour {
 	}
 
 	void Update () {
-
-		
+		playerHealthBar.value = Mathf.MoveTowards (playerHealth, 100.0f, 0.15f);
+		HealthCheck ();
 //		enemy.GetComponent<NavMeshAgent> ().enabled = true;
 		//enemy = enemy.GetComponent<Enemy> ();
 		//combat = enemy.GetComponent<Enemy> ().combatOn;
@@ -232,7 +232,7 @@ public class TextCombatScript4 : MonoBehaviour {
 			cursor.SetActive (true);
 			enemy.GetComponent<NavMeshAgent> ().enabled = true;
 			FPSC.GetComponent<CombatCameraLock> ().enabled = false;
-
+			AIHealth = 100;
 			enemy.GetComponent<ThirdPersonCharacter> ().enabled = true;
 			enemy.GetComponent<AICharacterController> ().enabled = true;
 		}
@@ -243,7 +243,7 @@ public class TextCombatScript4 : MonoBehaviour {
 		if (playerHealth < 5 || AIHealth < 5) {
 			if (playerHealth <= 0) {
 				inCombat = false;
-				Application.LoadLevel ("Game Over");
+				Application.LoadLevel (levelToLoad);
 			}
 			else if (AIHealth <= 0) {
 				inCombat = false;

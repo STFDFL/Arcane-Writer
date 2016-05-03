@@ -14,6 +14,7 @@ public class SpikeTrap : MonoBehaviour {
     public bool trapHasKilled = false;
     public float timeLeft = 5f;
     public Animation trapAnimation;
+	public string gameOverToLoad;
 	// Use this for initialization
 	void Start ()
     {
@@ -29,7 +30,7 @@ public class SpikeTrap : MonoBehaviour {
             timeLeft -= Time.deltaTime;
             if (timeLeft < 0)
             {
-                Application.LoadLevel(3);
+                Application.LoadLevel(gameOverToLoad);
             }
         }
     }
