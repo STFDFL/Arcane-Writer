@@ -65,6 +65,9 @@ using UnityStandardAssets.Characters.ThirdPerson;
     public GameObject itsLocked;
     public GameObject itsAlreadyClosed;
     public GameObject iShouldntDoThat;
+    public GameObject iLearnedWS;
+    public GameObject iLearnedFS;
+    public GameObject iLearnedLS;
 
     [Header("Sounds")]
 
@@ -344,7 +347,8 @@ using UnityStandardAssets.Characters.ThirdPerson;
             GameObject fireS;
             fireS = GameObject.FindGameObjectWithTag("firespell");
             fireS.SetActive(false);
-		}
+            iLearnedWS.SetActive(true);
+        }
 		if(objectHitName == "leechspell" && action == "read")
 		{
 			bloodLeechSymbol.SetActive(true);
@@ -352,7 +356,8 @@ using UnityStandardAssets.Characters.ThirdPerson;
 			GameObject leechS;
 			leechS = GameObject.FindGameObjectWithTag("leechspell");
 			leechS.SetActive(false);
-		}
+            iLearnedWS.SetActive(true);
+        }
 		if(objectHitName == "pushspell" && action == "read")
 		{
 			pushSymbol.SetActive(true);
@@ -361,7 +366,8 @@ using UnityStandardAssets.Characters.ThirdPerson;
 			GameObject pushS;
 			pushS = GameObject.FindGameObjectWithTag("pushspell");
 			pushS.SetActive(false);
-		}
+            iLearnedWS.SetActive(true);
+        }
         if (objectHitName == "celldoor")
         {
             GameObject tutorialDoor = GameObject.Find("Tutorial Door");
@@ -610,7 +616,8 @@ using UnityStandardAssets.Characters.ThirdPerson;
     }
     IEnumerator BustDoor()
     {
-        GameObject tutorialDoor = GameObject.Find("Tutorial Door");
+        // GameObject tutorialDoor = GameObject.Find("Tutorial Door");
+        GameObject tutorialDoor = hit.transform.gameObject;
         CellDoor cellDoorScript = tutorialDoor.GetComponent<CellDoor>();
         yield return new WaitForSeconds(2);
         cellDoorScript.pushIsApplied = true;
