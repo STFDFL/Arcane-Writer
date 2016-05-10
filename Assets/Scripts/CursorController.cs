@@ -221,7 +221,12 @@ using UnityStandardAssets.Characters.ThirdPerson;
     {
        
         objectName.text = "The Celldoor";
+
+        if(iLearnedPush == false)
         wordsSuggested.text = "open\n" +"close\n" +"";
+        else if (iLearnedPush == true)
+            wordsSuggested.text = "open\n" + "close\n" + "witch scream";
+
         objectHitName = "celldoor";
     }
     public void HittingPushSpell()
